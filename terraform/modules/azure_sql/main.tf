@@ -16,17 +16,17 @@ resource "azurerm_key_vault" "sql_adminpass" {
 
 # create access
 resource "azurerm_key_vault_access_policy" "tf_access" {
-  key_vault_id = azurerm_key_vault.sql_adminpass.id
-  tenant_id    = var.tenant_id
-  object_id    = var.object_id
-  key_permissions = ["Get", "Update", "List"] # move to different module
+  key_vault_id       = azurerm_key_vault.sql_adminpass.id
+  tenant_id          = var.tenant_id
+  object_id          = var.object_id
+  secret_permissions = ["Get", "Set", "List"] # move to different module
 }
 
 # store password in key vault
 resource "azurerm_key_vault_secret" "sql_admin" {
   name         = "${var.sql_server_name}-admin-password"
-  value        = random_password.sql_admin.result
   key_vault_id = azurerm_key_vault.sql_adminpass.id
+  value        = random_password.sql_admin.result
 }
 
 resource "azurerm_mssql_server" "this" {
@@ -40,12 +40,17 @@ resource "azurerm_mssql_server" "this" {
   tags                         = var.tags
 }
 
+# Need to make it production grade, meaning what will happen if not using a Serverless SKU
 resource "azurerm_mssql_database" "this" {
-  name      = var.database_name
-  server_id = azurerm_mssql_server.this.id
-  collation = var.collation
-  sku_name  = var.sku_name
-  tags      = var.tags
+  name                        = var.database_name
+  server_id                   = azurerm_mssql_server.this.id
+  sku_name                    = var.sku_name
+  read_scale                  = var.read_scale
+  geo_backup_enabled          = var.geo_backup_enabled
+  tags                        = var.tags
+  max_size_gb                 = var.max_size_gb
+  min_capacity                = var.min_capacity
+  auto_pause_delay_in_minutes = var.auto_pause_delay_in_minutes
   lifecycle {
     prevent_destroy = true
   }

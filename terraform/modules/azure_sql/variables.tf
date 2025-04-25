@@ -4,8 +4,8 @@ variable "tenant_id" {
 }
 
 variable "object_id" {
-  description = "TBD"
-  type = string
+  description = "Object ID of the component that is accessing the key vault"
+  type        = string
 }
 variable "resource_group_name" {
   description = "Name of the Resource Group where the MSSQL resources will reside."
@@ -50,15 +50,36 @@ variable "database_name" {
 variable "sku_name" {
   description = "Azure SQL SKU name (e.g. Basic, GP_S_Gen5_2)."
   type        = string
-  default     = "Basic"
 }
 
-variable "collation" {
-  description = "Database collation; keep the default unless you have specific localisation needs."
+variable "max_size_gb" {
+  description = "Max sotrage size of SQL"
   type        = string
-  default     = "SQL_Latin1_General_CP1_CI_AS"
 }
 
+variable "read_scale" {
+  description = "Is sql read servers will be autoscaled"
+  type        = bool
+  default     = false
+}
+
+variable "geo_backup_enabled" {
+  description = "Backup the database"
+  type        = bool
+  default     = false
+}
+
+variable "min_capacity" {
+  description = "value"
+  type        = string
+  default     = null
+}
+
+variable "auto_pause_delay_in_minutes" {
+  description = "pause instance after X amount of minutes"
+  type        = number
+  default     = null
+}
 # variable "firewall_rules" {
 #   description = "Map of firewall rules to add to the server (key = rule name)."
 #   type = map(object({
