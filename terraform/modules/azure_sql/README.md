@@ -9,7 +9,7 @@ module "azure_sql" {
 
   resource_group_name    = "rg-varonis"
   location               = "West Europe"
-  sql_server_name        = "varonis-sql-srv"
+  sql_server_name        = "varonis-sql"
   administrator_login    = "sqladmin"
   administrator_password = var.admin_password
   database_name          = "varonis_db"
