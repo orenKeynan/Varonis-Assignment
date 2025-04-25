@@ -1,41 +1,10 @@
-
-# create password for admin user
-resource "random_password" "sql_admin" {
-  length  = 12
-  special = true
-}
-
-# create key vault
-resource "azurerm_key_vault" "sql_adminpass" {
-  name                = "kv-sql-${var.sql_server_name}"
-  resource_group_name = var.resource_group_name
-  location            = var.location
-  tenant_id           = var.tenant_id
-  sku_name            = "standard"
-}
-
-# create access
-resource "azurerm_key_vault_access_policy" "tf_access" {
-  key_vault_id       = azurerm_key_vault.sql_adminpass.id
-  tenant_id          = var.tenant_id
-  object_id          = var.object_id
-  secret_permissions = ["Get", "Set", "List"] # move to different module
-}
-
-# store password in key vault
-resource "azurerm_key_vault_secret" "sql_admin" {
-  name         = "${var.sql_server_name}-admin-password"
-  key_vault_id = azurerm_key_vault.sql_adminpass.id
-  value        = random_password.sql_admin.result
-}
-
 resource "azurerm_mssql_server" "this" {
   name                         = var.sql_server_name
   resource_group_name          = var.resource_group_name
   location                     = var.location
   version                      = var.sql_version
   administrator_login          = var.administrator_login
-  administrator_login_password = random_password.sql_admin.result
+  administrator_login_password = var.administrator_login_password
   minimum_tls_version          = var.minimum_tls_version
   tags                         = var.tags
 }
