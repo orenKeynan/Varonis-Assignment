@@ -1,7 +1,15 @@
-########################
-variable "name" { type = string }
-variable "location" { type = string }
+variable "name" {
+  description = "Name of the Azure Resource Group."
+  type        = string
+}
+
+variable "location" {
+  description = "Azure region for the Resource Group."
+  type        = string
+}
+
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "Tags to apply to the Resource Group."
+  type        = map(string)
+  default     = {}
 }

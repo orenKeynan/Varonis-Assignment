@@ -1,7 +1,10 @@
+data "azurerm_client_config" "this" {
+}
+
 locals {
   rg_name = "rg-varonis"
   location = "West Europe"
-  tenant = "7147b932-52e5-40de-92fd-8dd9c3e95a88"
+  # tenant = "7147b932-52e5-40de-92fd-8dd9c3e95a88"
   tags = {
     environment = "dev"
     owner       = "oren"
@@ -20,7 +23,8 @@ module "azure_sql" {
 
   resource_group_name    = module.rg.name
   location               = module.rg.location
-  tenant                 = local.tenant
+  tenant_id              = data.azurerm_client_config.this.tenant_id
+  object_id              = data.azurerm_client_config.this.object_id
   tags                   = local.tags
 
   sql_server_name        = "varonis-sql-srv"
@@ -29,8 +33,8 @@ module "azure_sql" {
   sku_name               = "GP_S_Gen5_2"
   collation              = "SQL_Latin1_General_CP1_CI_AS"
   # firewall_rules         = 
-  tls_version = "1.2"
-  mysql_version = "12.0"
+  minimum_tls_version = "1.2"
+  sql_version = "12.0"
 }
 
 # convenient outputs
