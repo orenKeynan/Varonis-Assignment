@@ -22,6 +22,9 @@ resource "azurerm_container_app" "app" {
   revision_mode                = "Single"
 
   template {
+    min_replicas = var.min_replicas
+    max_replicas = var.max_replicas
+    termination_grace_period_seconds = var.termination_grace_period_seconds
     container {
       name   = var.container_name
       image  = var.image

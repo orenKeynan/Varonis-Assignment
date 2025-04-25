@@ -41,7 +41,9 @@ module "azure_sql" {
   tenant_id                   = data.azurerm_client_config.this.tenant_id
   object_id                   = data.azurerm_client_config.this.object_id
   tags                        = local.tags
+  key_vault_id                = module.kv_sql.key_vault_id
   sql_server_name             = "varonis-sql"
+  admin_secret_name           = "sqladmin"
   administrator_login         = "sqladmin"
   administrator_login_password = random_password.sql_admin.result
   database_name               = "restaurants"
@@ -53,6 +55,17 @@ module "azure_sql" {
   sql_version                 = "12.0"
 }
 
+module "acr" {
+  source = "./modules/docker_registry"   # adjust path as needed
+  acr_name                     = "varonishaacr"
+  sku                          = "Premium"
+  resource_group_name          = local.rg_name
+  location                     = local.location
+  admin_enabled                = false
+  public_network_access_enabled = false # possible only when sku = premium
+  tags = local.tags
+}
+
 module "network" {
   source              = "./modules/network"
   vnet_name           = "rest-vnet"
@@ -61,7 +74,7 @@ module "network" {
   address_space       = ["10.42.0.0/16"]
 
   subnets = {
-    appgw = "10.42.1.0/23"
+    appgw = "10.42.0.0/23"
     app   = "10.42.2.0/23"
   }
 
@@ -85,7 +98,7 @@ module "container_app" {
   resource_group_name       = local.rg_name
   container_name = "rest-api"
   cpu = 0.5
-  memory = 1.0
+  memory = "1.0Gi"
   subnet_id = module.network.subnet_ids["app"]
   image                     = "ghcr.io/you/restaurants:latest"
   logs_storage_account_id   = module.logs_storage.storage_account_id

@@ -14,10 +14,3 @@ resource "azurerm_key_vault_access_policy" "tf_access" {
   certificate_permissions = var.certificate_permissions
   key_permissions = var.key_permissions
 }
-
-# store password in key vault
-resource "azurerm_key_vault_secret" "sql_admin" {
-  name         = var.secret_name
-  key_vault_id = azurerm_key_vault.this.id
-  value        = var.value
-}

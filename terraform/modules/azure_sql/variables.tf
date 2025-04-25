@@ -72,7 +72,7 @@ variable "read_scale" {
 variable "geo_backup_enabled" {
   description = "Backup the database"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "min_capacity" {
@@ -86,6 +86,17 @@ variable "auto_pause_delay_in_minutes" {
   type        = number
   default     = null
 }
+
+variable "key_vault_id" {
+  description = "ID of the Key Vaulr"
+  type = string
+}
+
+variable "admin_secret_name" {
+  description = "The sql admin Secret name in KV"
+  type = string
+}
+
 # variable "firewall_rules" {
 #   description = "Map of firewall rules to add to the server (key = rule name)."
 #   type = map(object({

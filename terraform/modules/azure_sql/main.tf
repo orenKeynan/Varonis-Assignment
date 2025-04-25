@@ -1,3 +1,10 @@
+# store password in key vault
+resource "azurerm_key_vault_secret" "sql_admin" {
+  name         = var.admin_secret_name
+  key_vault_id = var.key_vault_id
+  value        = var.administrator_login_password
+}
+
 resource "azurerm_mssql_server" "this" {
   name                         = var.sql_server_name
   resource_group_name          = var.resource_group_name

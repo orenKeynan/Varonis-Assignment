@@ -26,8 +26,8 @@ variable "cpu" {
 
 variable "memory" {
     description = "GiB per replica."
-    type = number
-    default = 0.5
+    type = string
+    default = "0.5Gi"
 }
 
 variable "subnet_id" {
@@ -61,4 +61,22 @@ variable "retention_in_days" {
     description = "Retention of logs in days"
     type = number
     default = 30
+}
+
+variable "min_replicas" {
+  description = "minimum number of replicas"
+  type = number
+  default = 1
+}
+
+variable "max_replicas" {
+  description = "max number of replicas"
+  type = number
+  default = 3
+}
+
+variable "termination_grace_period_seconds" {
+    description = "time for pod to finish it's proecessing before forcing it"
+    type = number
+    default = 60
 }
