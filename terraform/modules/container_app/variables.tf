@@ -60,5 +60,5 @@ variable "sku" {
 variable "retention_in_days" {
     description = "Retention of logs in days"
     type = number
-    default = 5
+    default = 30
 }

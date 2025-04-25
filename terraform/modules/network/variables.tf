@@ -22,3 +22,9 @@ variable "subnets" {
   description = "Map of subnet_name => CIDR."
   type        = map(string)
 }
+
+variable "subnet_service_endpoints" {
+  description = "Map of <subnet_name> => list(string) of service endpoints."
+  type        = map(list(string))
+  default     = {}
+}

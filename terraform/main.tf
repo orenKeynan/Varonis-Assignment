@@ -55,14 +55,18 @@ module "azure_sql" {
 
 module "network" {
   source              = "./modules/network"
-  vnet_name           = "demo-vnet"
+  vnet_name           = "rest-vnet"
   location            = local.location
   resource_group_name = local.rg_name
   address_space       = ["10.42.0.0/16"]
 
   subnets = {
-    appgw = "10.42.1.0/24"
-    app   = "10.42.2.0/24"
+    appgw = "10.42.1.0/23"
+    app   = "10.42.2.0/23"
+  }
+
+  subnet_service_endpoints = {
+    appgw = ["Microsoft.Storage"]
   }
 }
 
@@ -70,7 +74,7 @@ module "logs_storage" {
   source              = "./modules/storage_account_storage"
   resource_group_name = local.rg_name
   location            = local.location
-  sa_name             = "restaurants_logs"
+  sa_name             = "restaurantslogs"
   network_subnet_ids   = [module.network.subnet_ids["appgw"]]
 }
 
@@ -105,7 +109,7 @@ module "app_gw" {
   sku_name            = "WAF_v2"
   capacity            = 1
   azurerm_public_fqdn = azurerm_public_ip.pip.fqdn
-  subnet_id           = module.network.subnet_ids["snet-ingress"]
+  subnet_id           = module.network.subnet_ids["appgw"]
 
   frontend_ports = {
     https = { name = "https", port = 443 }

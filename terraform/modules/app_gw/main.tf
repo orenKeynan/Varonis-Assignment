@@ -33,7 +33,7 @@ resource "azurerm_key_vault_certificate" "tls" {
         action_type = "AutoRenew"
       }
       trigger {
-        days_before_expiry = 365 # 1 year
+        days_before_expiry = 30 # 1 year
       }
     }
   }

@@ -11,6 +11,8 @@ resource "azurerm_key_vault_access_policy" "tf_access" {
   tenant_id          = var.tenant_id
   object_id          = var.object_id
   secret_permissions = var.secret_permissions
+  certificate_permissions = var.certificate_permissions
+  key_permissions = var.key_permissions
 }
 
 # store password in key vault

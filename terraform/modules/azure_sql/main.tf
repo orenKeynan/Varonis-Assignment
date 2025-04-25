@@ -21,7 +21,7 @@ resource "azurerm_mssql_database" "this" {
   min_capacity                = var.min_capacity
   auto_pause_delay_in_minutes = var.auto_pause_delay_in_minutes
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 }
 

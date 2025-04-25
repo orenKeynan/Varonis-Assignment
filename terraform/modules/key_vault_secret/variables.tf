@@ -38,7 +38,19 @@ variable "value" {
 }
 
 variable "secret_permissions" {
-  description = "List of permissions"
+  description = "List of permissions of 'secret'"
   type = list(string)
   default = ["Get", "Set", "List"]
+}
+
+variable "certificate_permissions" {
+  description = "List of permissions of 'cert'"
+  type = list(string)
+  default = ["Create", "Delete", "Get", "List", "Update"]
+}
+
+variable "key_permissions" {
+  description = "List of permissions of 'key"
+  type = list(string)
+  default = ["Create", "Delete", "Get", "List", "Update"]
 }
