@@ -8,14 +8,27 @@ variable "location" {
   description = "Azure region"
 }
 
+variable "tenant" {
+  type = string
+  description = "azure tenant"
+}
 variable "sql_server_name" { type = string }
 variable "administrator_login" { type = string }
-variable "administrator_password" { type = string, sensitive = true }
 variable "database_name" { type = string }
-variable "sku_name" { type = string default = "Basic" }
+variable "mysql_version" { type = string }
+variable "tls_version" { type = string }
+variable "sku_name" {
+  type    = string
+  default = "Basic"
+}
+variable "tags" {
+  description = "Tags applied to all resources (map)."
+  type        = map(string)
+  default     = {}
+}
 variable "collation" {
-  type        = string
-  default     = "SQL_Latin1_General_CP1_CI_AS"
+  type    = string
+  default = "SQL_Latin1_General_CP1_CI_AS"
 }
 variable "firewall_rules" {
   type = map(object({

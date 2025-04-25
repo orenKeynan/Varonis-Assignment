@@ -1,34 +1,45 @@
-module "rg" {
-  source   = "./modules/resource_group"
-  name     = var.resource_group_name
-  location = var.location
-  tags     = var.tags
+locals {
+  rg_name = "rg-varonis"
+  location = "West Europe"
+  tenant = "7147b932-52e5-40de-92fd-8dd9c3e95a88"
+  tags = {
+    environment = "dev"
+    owner       = "oren"
+  }
 }
 
-# 2) Azure SQL module
-# module "azure_sql" {
-#   source = "./modules/azure_sql"
+module "rg" {
+  source   = "./modules/resource_group"
+  name     = local.rg_name
+  location = local.location
+  tags     = local.tags
+}
 
-#   resource_group_name    = module.rg.name
-#   location               = module.rg.location
-#   tags                   = var.tags
+module "azure_sql" {
+  source = "./modules/azure_sql"
 
-#   sql_server_name        = var.sql_server_name
-#   administrator_login    = var.administrator_login
-#   administrator_password = var.administrator_password
-#   database_name          = var.database_name
-#   sku_name               = var.sku_name
-#   collation              = var.collation
-#   firewall_rules         = var.firewall_rules
-# }
+  resource_group_name    = module.rg.name
+  location               = module.rg.location
+  tenant                 = local.tenant
+  tags                   = local.tags
 
-# # convenient outputs
-# output "resource_group_id" {
-#   value       = module.rg.id
-#   description = "ID of the RG"
-# }
+  sql_server_name        = "varonis-sql-srv"
+  administrator_login    = "sqladmin"
+  database_name          = "restaurants"
+  sku_name               = "GP_S_Gen5_2"
+  collation              = "SQL_Latin1_General_CP1_CI_AS"
+  # firewall_rules         = 
+  tls_version = "1.2"
+  mysql_version = "12.0"
+}
 
-# output "sql_fqdn" {
-#   value       = module.azure_sql.server_fqdn
-#   description = "SQL Server FQDN"
-# }
+# convenient outputs
+output "resource_group_id" {
+  value       = module.rg.id
+  description = "ID of the RG"
+}
+
+output "sql_fqdn" {
+  value       = module.azure_sql.server_fqdn
+  description = "SQL Server FQDN"
+}
