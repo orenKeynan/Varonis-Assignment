@@ -40,7 +40,7 @@ variable "value" {
 variable "secret_permissions" {
   description = "List of permissions of 'secret'"
   type = list(string)
-  default = ["Get", "Set", "List"]
+  default = ["Get", "Set", "List", "Delete"]
 }
 
 variable "certificate_permissions" {
