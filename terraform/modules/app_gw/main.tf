@@ -1,12 +1,3 @@
-resource "azurerm_public_ip" "pip" {
-  name                = var.app_gw_name
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  allocation_method   = "Static"
-  sku                 = "Standard"
-  domain_name_label   = var.app_gw_name
-}
-
 # self-signed cert whose CN = FQDN of the public IP
 resource "azurerm_key_vault_certificate" "tls" {
   name         = "${var.app_gw_name}-ss-cert"
@@ -26,7 +17,7 @@ resource "azurerm_key_vault_certificate" "tls" {
       content_type = "application/x-pkcs12"
     }
     x509_certificate_properties {
-      subject                        = "CN=${azurerm_public_ip.pip.fqdn}"
+      subject                        = "CN=${var.azurerm_public_fqdn}"
       validity_in_months             = 12
       key_usage = [
         "cRLSign",

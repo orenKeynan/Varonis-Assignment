@@ -84,7 +84,16 @@ module "container_app" {
   memory = 1.0
   subnet_id = module.network.subnet_ids["app"]
   image                     = "ghcr.io/you/restaurants:latest"
-  logs_storage_account_id   = module.logs_storage.id
+  logs_storage_account_id   = module.logs_storage.storage_account_id
+}
+
+resource "azurerm_public_ip" "pip" {
+  name                = "rest"
+  location            = local.location
+  resource_group_name = local.rg_name
+  allocation_method   = "Static"
+  sku                 = "Standard"
+  domain_name_label   = "rest"
 }
 
 module "app_gw" {
@@ -95,6 +104,7 @@ module "app_gw" {
   resource_group_name = local.rg_name
   sku_name            = "WAF_v2"
   capacity            = 1
+  azurerm_public_fqdn = azurerm_public_ip.pip.fqdn
   subnet_id           = module.network.subnet_ids["snet-ingress"]
 
   frontend_ports = {

@@ -13,6 +13,11 @@ variable "resource_group_name" {
   type        = string
 }
 
+variable "azurerm_public_fqdn" {
+  description = "azure public fqdn"
+  type = string
+}
+
 variable "azure_key_id" {
  description = "ID of Azure Key Vault"
  type = string
