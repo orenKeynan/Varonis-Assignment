@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
 from datetime import datetime
+import uvicorn
 import os
 import logging
 import pyodbc

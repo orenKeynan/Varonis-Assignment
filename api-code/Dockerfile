@@ -26,4 +26,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY main.py .
 
-# The run command happens as part of the "main.py"
+CMD ["python3", "main.py"]

@@ -100,7 +100,7 @@ variable "admin_secret_name" {
 variable "public_network_access_enabled" {
   description = "Enable public network"
   type = bool
-  default = false
+  default = true
 }
 
 
