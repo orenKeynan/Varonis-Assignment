@@ -135,7 +135,7 @@ variable "readiness_probe" {
 }
 
 variable "secrets" {
-  description = "Map of secret-name => secret-value to inject into the container app"
+  description = "Map of secret-name"
   type        = map(string)
   default     = {}
 }

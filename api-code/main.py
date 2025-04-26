@@ -139,25 +139,25 @@ def get_restaurants_from_db(conn, style=None, vegetarian=None, delivery=None, op
         logger.error(f"Database query error: {str(e)}")
         raise HTTPException(status_code=500, detail="Error retrieving restaurant data")
 
-@app.middleware("http")
-async def add_security_headers(request: Request, call_next):
-    """Middleware to add security headers"""
-    # Log request info to stdout (will be captured by App Gateway logs)
-    request_path = request.url.path
-    query_params = dict(request.query_params)
-    client_ip = request.client.host
-    logger.info(f"Request received: {request.method} {request_path} from {client_ip} with params {query_params}")
+# @app.middleware("http")
+# async def add_security_headers(request: Request, call_next):
+#     """Middleware to add security headers"""
+#     # Log request info to stdout (will be captured by App Gateway logs)
+#     request_path = request.url.path
+#     query_params = dict(request.query_params)
+#     client_ip = request.client.host
+#     logger.info(f"Request received: {request.method} {request_path} from {client_ip} with params {query_params}")
     
-    # Process the request
-    response = await call_next(request)
+#     # Process the request
+#     response = await call_next(request)
     
-    # Add security headers
-    response.headers["X-Content-Type-Options"] = "nosniff"
-    response.headers["X-Frame-Options"] = "DENY"
-    response.headers["X-XSS-Protection"] = "1; mode=block"
-    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+#     # Add security headers
+#     response.headers["X-Content-Type-Options"] = "nosniff"
+#     response.headers["X-Frame-Options"] = "DENY"
+#     response.headers["X-XSS-Protection"] = "1; mode=block"
+#     response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
     
-    return response
+#     return response
 
 @app.get("/recommendation", response_model=RestaurantResponse)
 async def get_recommendation(
@@ -236,3 +236,8 @@ async def healthz(request: Request):
     finally:
         if conn:
             return_connection(conn)
+
+if __name__ == "__main__":
+    host = os.getenv("HOST")
+    port = int(os.getenv("PORT"))
+    uvicorn.run(app, host=host, port=port)

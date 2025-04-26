@@ -9,6 +9,7 @@ locals {
     owner       = "oren"
   }
   sql_admin_user = "sqladmin"
+  port = 8000
 }
 
 module "rg" {
@@ -127,11 +128,11 @@ module "container_app" {
   acr_username            = module.service_account.client_id
   secrets = {
     "acr-sp-secret"   = module.service_account.client_secret
-    "db_password"     = random_password.sql_admin # need to replace with non admin user
+    "db_password"     = random_password.sql_admin.result # need to replace with non admin user
   }
   acr_secret_name         = "acr-sp-secret"
   container_name          = "rest-api"
-  port                    = 8000
+  port                    = local.port
   cpu                     = 0.5
   memory                  = "1Gi"
   subnet_id               = module.network.subnet_ids["app"]
@@ -152,17 +153,23 @@ module "container_app" {
     DB_PASSWORD = {
       secret_name = "db_password"
     }
+    PORT = {
+      value = local.port
+    }
+    HOST = {
+      value = "0.0.0.0"
+    }
   }
 
   liveness_probe = {
     path                  = "/healthz"
-    port                  = 8000
+    port                  = local.port
     transport             = "HTTP"
   }
 
   readiness_probe = {
     path                  = "/healthz"
-    port                  = 8000
+    port                  = local.port
     transport             = "HTTP" 
   }
 }
