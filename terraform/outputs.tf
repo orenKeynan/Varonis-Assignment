@@ -22,5 +22,8 @@ output "container_fqdn" {
   value = module.container_app.fqdn
 }
 
+output "all" {
+  value = module.container_app.all
+}
 # https://restaurants-api.internal.calmdune-1edbf9c1.eastus.azurecontainerapps.io
 # https://restaurants-api--0000002.internal.calmdune-1edbf9c1.eastus.azurecontainerapps.io

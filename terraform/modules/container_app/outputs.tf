@@ -16,6 +16,14 @@ output "fqdn" {
   value = azurerm_container_app.app.ingress[0].fqdn
 }
 
+output "default_domain" {
+  value = azurerm_container_app_environment.env.default_domain
+}
+
+output "static_ip" {
+  value = azurerm_container_app_environment.env.static_ip_address
+}
+
 output "container_app_identity_principal_id" {
   description = "Principal ID of the system-assigned managed identity."
   value       = azurerm_container_app.app.identity[0].principal_id

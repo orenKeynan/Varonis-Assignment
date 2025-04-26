@@ -156,3 +156,13 @@ variable "logs_storage_account_id" {
   description = "Storage account for diagnostics."
   type        = string
 }
+
+variable "app_subnet_id" {
+  description = "The private subnet of the application"
+  type = string
+}
+
+variable "app_static_ip" {
+  description = "The static ip of the Container app"
+  type = string
+}

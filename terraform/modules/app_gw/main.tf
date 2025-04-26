@@ -123,6 +123,15 @@ resource "azurerm_application_gateway" "this" {
     }
   }
 
+  private_link_configuration {
+    name = "${var.app_gw_name}-link"
+    ip_configuration {
+      name = "${var.app_gw_name}-ipc"
+      subnet_id = var.app_subnet_id
+      private_ip_address_allocation = "Dynamic"
+      primary = true
+    }
+  }
   # Listeners
   dynamic "http_listener" {
     for_each = var.http_listeners

@@ -126,7 +126,7 @@ module "container_app" {
   cpu                     = 0.5
   memory                  = "1Gi"
   subnet_id               = module.network.subnet_ids["app"]
-  image                   = "varonishaacr.azurecr.io/restaurant-app:5245cf"
+  image                   = "varonishaacr.azurecr.io/restaurant-app:9"
   allow_insecure_connection = true
   client_certificate_mode = "ignore"
   external_enabled        = true
@@ -141,6 +141,22 @@ module "container_app" {
     path                  = "/healthz"
     port                  = 8000
     transport             = "HTTP" 
+  }
+}
+
+
+module "pdns" {
+  source = "./modules/private_dns"
+  pdns_name = module.container_app.default_domain
+  virtual_network_id = module.network.vnet_id
+  resource_group_name = local.rg_name
+  private_dns_a_records = {
+    "*." = {
+      records             = module.container_app.static_ip
+    }
+    "@" = {
+      records             = module.container_app.static_ip
+    }
   }
 }
 
@@ -164,6 +180,8 @@ module "app_gw" {
   azurerm_public_fqdn = azurerm_public_ip.pip.fqdn
   subnet_id           = module.network.subnet_ids["appgw"]
   logs_storage_account_id = module.logs_storage.storage_account_id
+  app_subnet_id       = module.network.subnet_ids["app"]
+  app_static_ip       = module.container_app.static_ip
   frontend_ports = {
     https = { name = "https", port = 443 }
   }
