@@ -99,13 +99,23 @@ variable "admin_secret_name" {
 
 variable "public_network_access_enabled" {
   description = "Enable public network"
-  type = bool
-  default = true
+  type        = bool
+  default     = true
 }
-
 
 variable "private_endpoints" {
   description = "Map of logical name → subnet ID to create one private endpoint per subnet"
   type        = map(string)
   default     = {}
+}
+
+variable "pdns_zone_id" {
+  description = "ID of sql pdns sonze"
+  type        = string
+}
+
+variable "pdns_zone_group_name" {
+  description = "Name of the Private DNS zone-group attached to the Private Endpoint."
+  type        = string
+  default     = "sql-dns-group"
 }

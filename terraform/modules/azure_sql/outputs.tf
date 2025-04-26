@@ -10,5 +10,5 @@ output "database_id" {
 
 output "database_name" {
   description = "Sql Database Name"
-  value = azurerm_mssql_database.this.name
+  value       = azurerm_mssql_database.this.name
 }

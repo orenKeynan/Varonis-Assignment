@@ -9,7 +9,7 @@ locals {
     owner       = "oren"
   }
   sql_admin_user = "sqladmin"
-  port = 8000
+  port           = 8000
 }
 
 module "rg" {
@@ -31,15 +31,15 @@ module "network" {
     appgw = {
       ip = "10.42.0.0/23"
     }
-    app   = {
-      ip = "10.42.2.0/23"
+    app = {
+      ip                                            = "10.42.2.0/23"
       private_link_service_network_policies_enabled = false
     }
   }
 
   subnet_service_endpoints = {
     appgw = ["Microsoft.Storage"]
-    app = ["Microsoft.Sql"]
+    app   = ["Microsoft.Sql"]
   }
 }
 
@@ -60,15 +60,27 @@ module "kv_sql" {
   value               = random_password.sql_admin.result
 }
 
+
+module "pdns_sql" {
+  source              = "./modules/private_dns"
+  pdns_name           = "privatelink.database.windows.net"
+  virtual_network_id  = module.network.vnet_id
+  resource_group_name = local.rg_name
+
+  # No static records — the SQL private-endpoint NIC auto-creates the A-record
+  private_dns_a_records = {}
+}
+
 module "azure_sql" {
-  source                       = "./modules/azure_sql"
-  resource_group_name          = module.rg.name
-  location                     = module.rg.location
-  tenant_id                    = data.azurerm_client_config.this.tenant_id
-  object_id                    = data.azurerm_client_config.this.object_id
-  tags                         = local.tags
+  source              = "./modules/azure_sql"
+  resource_group_name = module.rg.name
+  location            = module.rg.location
+  tenant_id           = data.azurerm_client_config.this.tenant_id
+  object_id           = data.azurerm_client_config.this.object_id
+  tags                = local.tags
+  pdns_zone_id        = module.pdns_sql.zone_id
   private_endpoints = {
-    app   = module.network.subnet_ids["app"]
+    app = module.network.subnet_ids["app"]
   }
   key_vault_id                 = module.kv_sql.key_vault_id
   sql_server_name              = "varonis-sql"
@@ -83,6 +95,7 @@ module "azure_sql" {
   minimum_tls_version          = "1.2"
   sql_version                  = "12.0"
 }
+
 
 module "acr" {
   source                        = "./modules/docker_registry" # adjust path as needed
@@ -125,26 +138,26 @@ module "logs_storage" {
 }
 
 module "container_app" {
-  source                  = "./modules/container_app"
-  app_name                = "restaurants-api"
-  location                = local.location
-  resource_group_name     = local.rg_name
-  acr_login_server        = module.acr.login_server
-  acr_username            = module.service_account.client_id
+  source              = "./modules/container_app"
+  app_name            = "restaurants-api"
+  location            = local.location
+  resource_group_name = local.rg_name
+  acr_login_server    = module.acr.login_server
+  acr_username        = module.service_account.client_id
   secrets = {
-    "acr-sp-secret"   = module.service_account.client_secret
-    "db-password"     = random_password.sql_admin.result # need to replace with non admin user
+    "acr-sp-secret" = module.service_account.client_secret
+    "db-password"   = random_password.sql_admin.result # need to replace with non admin user
   }
-  acr_secret_name         = "acr-sp-secret"
-  container_name          = "rest-api"
-  port                    = local.port
-  cpu                     = 0.5
-  memory                  = "1Gi"
-  subnet_id               = module.network.subnet_ids["app"]
-  image                   = "varonishaacr.azurecr.io/restaurant-app:13"
+  acr_secret_name           = "acr-sp-secret"
+  container_name            = "rest-api"
+  port                      = local.port
+  cpu                       = 0.5
+  memory                    = "1Gi"
+  subnet_id                 = module.network.subnet_ids["app"]
+  image                     = "varonishaacr.azurecr.io/restaurant-app:14" # To release a new version, change this
   allow_insecure_connection = true
-  client_certificate_mode = "ignore"
-  external_enabled        = true
+  client_certificate_mode   = "ignore"
+  external_enabled          = true
   env = {
     DB_SERVER = {
       value = module.azure_sql.server_fqdn
@@ -167,32 +180,32 @@ module "container_app" {
   }
 
   liveness_probe = {
-    path                  = "/healthz"
-    port                  = local.port
-    transport             = "HTTP"
+    path      = "/healthz"
+    port      = local.port
+    transport = "HTTP"
   }
 
   readiness_probe = {
-    path                  = "/healthz"
-    port                  = local.port
-    transport             = "HTTP" 
+    path      = "/healthz"
+    port      = local.port
+    transport = "HTTP"
   }
 }
 
 
-module "pdns" {
-  source = "./modules/private_dns"
-  pdns_name = module.container_app.default_domain
-  virtual_network_id = module.network.vnet_id
+module "pdns_app_gw_to_container_app" {
+  source              = "./modules/private_dns"
+  pdns_name           = module.container_app.default_domain
+  virtual_network_id  = module.network.vnet_id
   resource_group_name = local.rg_name
   # Using https://learn.microsoft.com/en-us/azure/container-apps/waf-app-gateway?tabs=default-domain#retrieve-your-container-apps-domain
   # to connect the appgateway to the private app subnet
   private_dns_a_records = {
     "*" = {
-      records             = [module.container_app.static_ip]
+      records = [module.container_app.static_ip]
     }
     "@" = {
-      records             = [module.container_app.static_ip]
+      records = [module.container_app.static_ip]
     }
   }
 }
@@ -207,18 +220,18 @@ resource "azurerm_public_ip" "pip" {
 }
 
 module "app_gw" {
-  source              = "./modules/app_gw"
-  app_gw_name         = "rest-gw"
-  location            = local.location
-  azure_key_id        = module.kv_sql.key_vault_id
-  resource_group_name = local.rg_name
-  sku_name            = "WAF_v2"
-  capacity            = 1
-  azurerm_public_fqdn = azurerm_public_ip.pip.fqdn
-  subnet_id           = module.network.subnet_ids["appgw"]
+  source                  = "./modules/app_gw"
+  app_gw_name             = "rest-gw"
+  location                = local.location
+  azure_key_id            = module.kv_sql.key_vault_id
+  resource_group_name     = local.rg_name
+  sku_name                = "WAF_v2"
+  capacity                = 1
+  azurerm_public_fqdn     = azurerm_public_ip.pip.fqdn
+  subnet_id               = module.network.subnet_ids["appgw"]
   logs_storage_account_id = module.logs_storage.storage_account_id
-  app_subnet_id       = module.network.subnet_ids["app"]
-  app_static_ip       = module.container_app.static_ip
+  app_subnet_id           = module.network.subnet_ids["app"]
+  app_static_ip           = module.container_app.static_ip
   frontend_ports = {
     https = { name = "https", port = 443 }
   }
@@ -236,12 +249,12 @@ module "app_gw" {
 
   backend_http_settings = {
     api = {
-      name                  = "api"
-      port                  = 80
-      protocol              = "Http"
-      cookie_based_affinity = "Disabled"
-      request_timeout       = 30
-      probe_name            = "api-healthz"
+      name                                = "api"
+      port                                = 80
+      protocol                            = "Http"
+      cookie_based_affinity               = "Disabled"
+      request_timeout                     = 30
+      probe_name                          = "api-healthz"
       pick_host_name_from_backend_address = true
     }
   }
@@ -267,13 +280,13 @@ module "app_gw" {
   }
   health_probes = [
     {
-      name                    = "api-healthz"
-      protocol                = "Http"
-      path                    = "/healthz"
-      interval                = 15      # probe every 15s
-      timeout                 = 5       # wait up to 5s for a reply
-      unhealthy_threshold     = 2       # mark down after 2 failures
-      host = module.container_app.fqdn
+      name                = "api-healthz"
+      protocol            = "Http"
+      path                = "/healthz"
+      interval            = 15 # probe every 15s
+      timeout             = 5  # wait up to 5s for a reply
+      unhealthy_threshold = 2  # mark down after 2 failures
+      host                = module.container_app.fqdn
     }
   ]
 }

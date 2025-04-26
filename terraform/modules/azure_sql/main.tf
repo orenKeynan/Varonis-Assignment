@@ -6,15 +6,15 @@ resource "azurerm_key_vault_secret" "sql_admin" {
 }
 
 resource "azurerm_mssql_server" "this" {
-  name                         = var.sql_server_name
-  resource_group_name          = var.resource_group_name
-  location                     = var.location
-  version                      = var.sql_version
-  public_network_access_enabled= var.public_network_access_enabled
-  administrator_login          = var.administrator_login
-  administrator_login_password = var.administrator_login_password
-  minimum_tls_version          = var.minimum_tls_version
-  tags                         = var.tags
+  name                          = var.sql_server_name
+  resource_group_name           = var.resource_group_name
+  location                      = var.location
+  version                       = var.sql_version
+  public_network_access_enabled = var.public_network_access_enabled
+  administrator_login           = var.administrator_login
+  administrator_login_password  = var.administrator_login_password
+  minimum_tls_version           = var.minimum_tls_version
+  tags                          = var.tags
 }
 
 # Need to make it production grade, meaning what will happen if not using a Serverless SKU
@@ -46,5 +46,10 @@ resource "azurerm_private_endpoint" "sql" {
     private_connection_resource_id = azurerm_mssql_server.this.id
     subresource_names              = ["sqlServer"]
     is_manual_connection           = false
+  }
+
+  private_dns_zone_group {
+    name                 = var.pdns_zone_group_name
+    private_dns_zone_ids = [var.pdns_zone_id]
   }
 }

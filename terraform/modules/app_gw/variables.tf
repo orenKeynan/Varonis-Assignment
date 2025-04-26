@@ -84,12 +84,12 @@ variable "backend_pools" {
 variable "backend_http_settings" {
   description = "HTTP settings per pool."
   type = map(object({
-    name                  = string
-    port                  = number
-    protocol              = string # Http or Https
-    cookie_based_affinity = string # Enabled / Disabled
-    request_timeout       = number
-    probe_name            = optional(string, null)
+    name                                = string
+    port                                = number
+    protocol                            = string # Http or Https
+    cookie_based_affinity               = string # Enabled / Disabled
+    request_timeout                     = number
+    probe_name                          = optional(string, null)
     pick_host_name_from_backend_address = optional(bool, false)
   }))
 }
@@ -144,8 +144,8 @@ variable "waf_rule_set_version" {
 
 variable "user_assigned_identity_name" {
   description = "Identity name to access the cert"
-  type = string
-  default = "container-iden"
+  type        = string
+  default     = "container-iden"
 }
 
 variable "retention_in_days" {
@@ -161,26 +161,26 @@ variable "logs_storage_account_id" {
 
 variable "app_subnet_id" {
   description = "The private subnet of the application"
-  type = string
+  type        = string
 }
 
 variable "app_static_ip" {
   description = "The static ip of the Container app"
-  type = string
+  type        = string
 }
 
 variable "health_probes" {
   description = "List of health probes to configure on the Application Gateway"
   type = list(object({
-    name                                    = string
-    protocol                                = string                        # "Http" or "Https"
-    host                                    = optional(string)              # e.g. "my-app.internal"
-    path                                    = optional(string)              # e.g. "/healthz"
-    interval                                = optional(number)              # probe interval in seconds
-    timeout                                 = optional(number)              # probe timeout in seconds
-    unhealthy_threshold                     = optional(number)              # how many failures before marking unhealthy
-    pick_host_name_from_backend_http_settings = optional(bool)              # whether to reuse host from http-settings
-    match = optional(object({                                       # what status codes count as healthy
+    name                                      = string
+    protocol                                  = string           # "Http" or "Https"
+    host                                      = optional(string) # e.g. "my-app.internal"
+    path                                      = optional(string) # e.g. "/healthz"
+    interval                                  = optional(number) # probe interval in seconds
+    timeout                                   = optional(number) # probe timeout in seconds
+    unhealthy_threshold                       = optional(number) # how many failures before marking unhealthy
+    pick_host_name_from_backend_http_settings = optional(bool)   # whether to reuse host from http-settings
+    match = optional(object({                                    # what status codes count as healthy
       status_code = list(string)
     }))
   }))

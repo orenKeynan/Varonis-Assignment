@@ -38,8 +38,8 @@ variable "subnet_id" {
 variable "env" {
   description = "Map of env‐var name"
   type = map(object({
-    value       = optional(string)  # for plain text
-    secret_name = optional(string)  # for container-app‐level secrets
+    value       = optional(string) # for plain text
+    secret_name = optional(string) # for container-app‐level secrets
   }))
   default = {}
 }
@@ -98,39 +98,39 @@ variable "acr_username" {
 
 variable "port" {
   description = "application port"
-  type = number
+  type        = number
 }
 
 variable "allow_insecure_connection" {
-  type = bool
+  type    = bool
   default = false
 }
 
 variable "client_certificate_mode" {
-  type = string
+  type    = string
   default = "ignore"
 }
 
 variable "external_enabled" {
-  type = bool
+  type    = bool
   default = true
 }
 
 variable "liveness_probe" {
   description = "Configuration for the container liveness probe"
   type = object({
-    path                    = string
-    transport               = string
-    port                    = number
+    path      = string
+    transport = string
+    port      = number
   })
 }
 
 variable "readiness_probe" {
   description = "Configuration for the container readiness probe"
   type = object({
-    path                    = string
-    transport               = string
-    port                    = number
+    path      = string
+    transport = string
+    port      = number
   })
 }
 

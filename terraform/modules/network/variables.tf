@@ -21,7 +21,7 @@ variable "address_space" {
 variable "subnets" {
   description = "Map of subnet_name => CIDR."
   type = map(object({
-    ip       = string
+    ip                                            = string
     private_link_service_network_policies_enabled = optional(bool, true)
   }))
 }

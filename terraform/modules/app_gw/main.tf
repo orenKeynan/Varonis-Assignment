@@ -91,14 +91,14 @@ resource "azurerm_application_gateway" "this" {
   }
 
   identity {
-    type = "UserAssigned"
+    type         = "UserAssigned"
     identity_ids = [azurerm_user_assigned_identity.appgw_identity.id]
   }
 
   # SSL certificates (multiple if you use SNI)
   ssl_certificate {
-      name     = "${var.app_gw_name}-ss-cert"
-      key_vault_secret_id = azurerm_key_vault_certificate.tls.secret_id
+    name                = "${var.app_gw_name}-ss-cert"
+    key_vault_secret_id = azurerm_key_vault_certificate.tls.secret_id
   }
 
   # Backend address pools
@@ -115,12 +115,12 @@ resource "azurerm_application_gateway" "this" {
   dynamic "backend_http_settings" {
     for_each = var.backend_http_settings
     content {
-      name                  = backend_http_settings.value.name
-      port                  = backend_http_settings.value.port
-      protocol              = backend_http_settings.value.protocol
-      cookie_based_affinity = backend_http_settings.value.cookie_based_affinity
-      request_timeout       = backend_http_settings.value.request_timeout
-      probe_name            = backend_http_settings.value.probe_name
+      name                                = backend_http_settings.value.name
+      port                                = backend_http_settings.value.port
+      protocol                            = backend_http_settings.value.protocol
+      cookie_based_affinity               = backend_http_settings.value.cookie_based_affinity
+      request_timeout                     = backend_http_settings.value.request_timeout
+      probe_name                          = backend_http_settings.value.probe_name
       pick_host_name_from_backend_address = backend_http_settings.value.pick_host_name_from_backend_address
     }
   }
@@ -128,10 +128,10 @@ resource "azurerm_application_gateway" "this" {
   private_link_configuration {
     name = "${var.app_gw_name}-link"
     ip_configuration {
-      name = "${var.app_gw_name}-ipc"
-      subnet_id = var.app_subnet_id
+      name                          = "${var.app_gw_name}-ipc"
+      subnet_id                     = var.app_subnet_id
       private_ip_address_allocation = "Dynamic"
-      primary = true
+      primary                       = true
     }
   }
   # Listeners
@@ -173,10 +173,10 @@ resource "azurerm_application_gateway" "this" {
   dynamic "probe" {
     for_each = var.health_probes
     content {
-      name     = probe.value.name
-      protocol = probe.value.protocol
-      host     = lookup(probe.value, "host", null)
-      path     = lookup(probe.value, "path", null)
+      name                = probe.value.name
+      protocol            = probe.value.protocol
+      host                = lookup(probe.value, "host", null)
+      path                = lookup(probe.value, "path", null)
       interval            = lookup(probe.value, "interval", 30)
       timeout             = lookup(probe.value, "timeout", 120)
       unhealthy_threshold = lookup(probe.value, "unhealthy_threshold", 3)
@@ -187,7 +187,7 @@ resource "azurerm_application_gateway" "this" {
       )
 
       match {
-          status_code = probe.value.match != null ? probe.value.match.status_codes : ["200-399"]
+        status_code = probe.value.match != null ? probe.value.match.status_codes : ["200-399"]
       }
     }
   }
@@ -204,6 +204,6 @@ resource "azurerm_monitor_diagnostic_setting" "appgw_access_logs_to_sa" {
 
   metric {
     category = "AllMetrics"
-    enabled = false
+    enabled  = false
   }
 }
