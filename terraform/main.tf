@@ -135,6 +135,23 @@ module "logs_storage" {
   network_subnet_ids  = [module.network.subnet_ids["appgw"]]
 }
 
+##############
+### Creat the remote backend for the terraform state
+resource "azurerm_storage_container" "tfbackend" {
+  name                  = "tfstate"
+  storage_account_id  = module.logs_storage.storage_account_id
+  # Using container this I'm running "terraform apply" locally from my laptop.
+  # If it was part of a CI flow that runs the workload as part of the Vnet,
+  # would use "private" access and private endpoint access
+  container_access_type = "private"
+}
+
+resource "azurerm_role_assignment" "tfstate_contributor" {
+  scope                = azurerm_storage_container.tfbackend.id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = data.azurerm_client_config.this.object_id
+}
+
 module "container_app" {
   source              = "./modules/container_app"
   app_name            = "restaurants-api"
@@ -152,7 +169,7 @@ module "container_app" {
   cpu                       = 0.5
   memory                    = "1Gi"
   subnet_id                 = module.network.subnet_ids["app"]
-  image                     = "varonishaacr.azurecr.io/restaurant-app:16" # To release a new version, change this
+  image                     = "varonishaacr.azurecr.io/restaurant-app:17" # To release a new version, change this
   allow_insecure_connection = true # TLS termination is done on the app gw, all internal communication is done with HTTP
   client_certificate_mode   = "ignore" 
   external_enabled          = true

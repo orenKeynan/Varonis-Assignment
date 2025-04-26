@@ -6,6 +6,12 @@ terraform {
       version = "~> 4.26.0"
     }
   }
+  backend "azurerm" {
+    resource_group_name  = "rg-varonis"
+    storage_account_name = "restaurantslogs"
+    container_name       = "tfstate"
+    key                  = "terraform.tfstate"
+  }
 }
 
 provider "azurerm" {
