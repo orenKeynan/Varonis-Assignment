@@ -8,7 +8,7 @@ locals {
     environment = "dev"
     owner       = "oren"
   }
-  sql_admin_pass = "sqladmin"
+  sql_admin_user = "sqladmin"
 }
 
 module "rg" {
@@ -45,7 +45,7 @@ module "azure_sql" {
   key_vault_id                 = module.kv_sql.key_vault_id
   sql_server_name              = "varonis-sql"
   admin_secret_name            = "sqladmin"
-  administrator_login          = local.sql_admin_pass
+  administrator_login          = local.sql_admin_user
   administrator_login_password = random_password.sql_admin.result
   database_name                = "restaurants"
   sku_name                     = "GP_S_Gen5_1"
@@ -146,8 +146,8 @@ module "container_app" {
     DB_NAME = {
       value = module.azure_sql.database_name
     }
-    DB_NAME = {
-      value = module.azure_sql.database_name
+    DB_USERNAME = {
+      value = local.sql_admin_user
     }
     DB_PASSWORD = {
       secret_name = "db_password"

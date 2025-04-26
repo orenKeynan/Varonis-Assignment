@@ -36,10 +36,14 @@ variable "subnet_id" {
 }
 
 variable "env" {
-  description = "ENV VARS to pass to the app"
-  type        = map(string)
-  default     = {}
+  description = "Map of env‐var name"
+  type = map(object({
+    value       = optional(string)  # for plain text
+    secret_name = optional(string)  # for container-app‐level secrets
+  }))
+  default = {}
 }
+
 
 variable "container_name" {
   description = "Container's name"
