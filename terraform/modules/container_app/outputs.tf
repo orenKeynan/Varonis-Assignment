@@ -13,6 +13,10 @@ output "container_app_fqdn" {
   value       = azurerm_container_app.app.latest_revision_fqdn
 }
 
+output "container_app_real_fqdn" {
+  value = azurerm_container_app.app.custom_domain_verification_id
+}
+
 output "container_app_identity_principal_id" {
   description = "Principal ID of the system-assigned managed identity."
   value       = azurerm_container_app.app.identity[0].principal_id

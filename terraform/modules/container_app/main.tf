@@ -32,27 +32,39 @@ resource "azurerm_container_app" "app" {
   }
   ingress {
       target_port      = var.port
-      external_enabled = false
+      allow_insecure_connections = var.allow_insecure_connection
+      external_enabled = var.external_enabled
+      client_certificate_mode = var.client_certificate_mode
       traffic_weight {
         percentage = 100
         latest_revision = true 
       }
   }
   template {
-    min_replicas                     = var.min_replicas
-    max_replicas                     = var.max_replicas
-    termination_grace_period_seconds = var.termination_grace_period_seconds
-    container {
-      name   = var.container_name
-      image  = var.image
-      cpu    = var.cpu
-      memory = var.memory
-      dynamic "env" {
-        for_each = var.env
-        content {
-          name  = env.key
-          value = env.value
+      min_replicas                     = var.min_replicas
+      max_replicas                     = var.max_replicas
+      termination_grace_period_seconds = var.termination_grace_period_seconds
+      container {
+        name   = var.container_name
+        image  = var.image
+        cpu    = var.cpu
+        memory = var.memory
+        dynamic "env" {
+          for_each = var.env
+          content {
+            name  = env.key
+            value = env.value
+          }
         }
+        liveness_probe {
+          path = var.liveness_probe.path
+          port = var.port
+          transport = var.liveness_probe.transport
+        }
+        readiness_probe {
+          path = var.liveness_probe.path
+          port = var.port
+          transport = var.liveness_probe.transport
       }
     }
   }

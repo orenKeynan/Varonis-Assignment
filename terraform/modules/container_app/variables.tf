@@ -100,3 +100,36 @@ variable "port" {
   description = "application port"
   type = number
 }
+
+variable "allow_insecure_connection" {
+  type = bool
+  default = false
+}
+
+variable "client_certificate_mode" {
+  type = string
+  default = "ignore"
+}
+
+variable "external_enabled" {
+  type = bool
+  default = true
+}
+
+variable "liveness_probe" {
+  description = "Configuration for the container liveness probe"
+  type = object({
+    path                    = string
+    transport               = string
+    port                    = number
+  })
+}
+
+variable "readiness_probe" {
+  description = "Configuration for the container readiness probe"
+  type = object({
+    path                    = string
+    transport               = string
+    port                    = number
+  })
+}

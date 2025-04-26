@@ -127,6 +127,21 @@ module "container_app" {
   memory                  = "1Gi"
   subnet_id               = module.network.subnet_ids["app"]
   image                   = "varonishaacr.azurecr.io/restaurant-app:5245cf"
+  allow_insecure_connection = true
+  client_certificate_mode = "ignore"
+  external_enabled        = true
+
+  liveness_probe = {
+    path                  = "/healthz"
+    port                  = 8000
+    transport             = "HTTP"
+  }
+
+  readiness_probe = {
+    path                  = "/healthz"
+    port                  = 8000
+    transport             = "HTTP" 
+  }
 }
 
 resource "azurerm_public_ip" "pip" {
