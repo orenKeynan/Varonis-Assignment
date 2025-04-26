@@ -1,6 +1,6 @@
 variable "app_name" {
-    description = "App name"
-    type = string
+  description = "App name"
+  type        = string
 }
 
 variable "location" {
@@ -14,89 +14,89 @@ variable "resource_group_name" {
 }
 
 variable "image" {
-    description = "Docker image URI."
-    type = string
+  description = "Docker image URI."
+  type        = string
 }
 
 variable "cpu" {
-    description = "vCPU per replica." 
-    type = number
-    default = 0.25
+  description = "vCPU per replica."
+  type        = number
+  default     = 0.25
 }
 
 variable "memory" {
-    description = "GiB per replica."
-    type = string
-    default = "0.5Gi"
+  description = "GiB per replica."
+  type        = string
+  default     = "0.5Gi"
 }
 
 variable "subnet_id" {
-    description = "Subnet for container env."
-    type = string
+  description = "Subnet for container env."
+  type        = string
 }
 
 variable "env" {
-    description = "ENV VARS to pass to the app"
-    type = map(string)
-    default = {}
+  description = "ENV VARS to pass to the app"
+  type        = map(string)
+  default     = {}
 }
 
 variable "container_name" {
-    description = "Container's name"
-    type = string
+  description = "Container's name"
+  type        = string
 }
 
 variable "logs_storage_account_id" {
-    description = "Storage account for diagnostics."
-    type = string
+  description = "Storage account for diagnostics."
+  type        = string
 }
 
 variable "sku" {
-    description = "SKU of container app logs analytics"
-    type = string
-    default = "PerGB2018"
+  description = "SKU of container app logs analytics"
+  type        = string
+  default     = "PerGB2018"
 }
 
 variable "retention_in_days" {
-    description = "Retention of logs in days"
-    type = number
-    default = 30
+  description = "Retention of logs in days"
+  type        = number
+  default     = 30
 }
 
 variable "min_replicas" {
   description = "minimum number of replicas"
-  type = number
-  default = 1
+  type        = number
+  default     = 1
 }
 
 variable "max_replicas" {
   description = "max number of replicas"
-  type = number
-  default = 3
+  type        = number
+  default     = 3
 }
 
 variable "termination_grace_period_seconds" {
-    description = "time for pod to finish it's proecessing before forcing it"
-    type = number
-    default = 60
+  description = "time for pod to finish it's proecessing before forcing it"
+  type        = number
+  default     = 60
 }
 
 variable "acr_secret_name" {
   description = "ACR Secret value name"
-  type = string
+  type        = string
 }
 
 variable "acr_secret_value" {
   description = "ACR Secret value value"
-  type = string
+  type        = string
 }
 
 variable "acr_login_server" {
   description = "ACR Login Server"
-  type = string
+  type        = string
 }
 
 variable "acr_username" {
   description = "ACR Username"
-  type = string
+  type        = string
 }

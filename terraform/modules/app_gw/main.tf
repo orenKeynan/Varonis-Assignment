@@ -17,8 +17,8 @@ resource "azurerm_key_vault_certificate" "tls" {
       content_type = "application/x-pkcs12"
     }
     x509_certificate_properties {
-      subject                        = "CN=${var.azurerm_public_fqdn}"
-      validity_in_months             = 12
+      subject            = "CN=${var.azurerm_public_fqdn}"
+      validity_in_months = 12
       key_usage = [
         "cRLSign",
         "dataEncipherment",

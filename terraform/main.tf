@@ -70,7 +70,7 @@ module "acr" {
 
 module "service_account" {
   source              = "./modules/service_account"
-  name                = "github-workflow-sp"
+  name                = "acr_user"
   secret_length       = 20
   secret_expire_hours = 168
 }

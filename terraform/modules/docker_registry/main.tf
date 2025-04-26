@@ -3,8 +3,8 @@ resource "azurerm_container_registry" "this" {
   resource_group_name = var.resource_group_name
   location            = var.location
 
-  sku                 = var.sku
-  admin_enabled       = var.admin_enabled
+  sku           = var.sku
+  admin_enabled = var.admin_enabled
 
   # Disable public network access if you plan to use private endpoints only
   public_network_access_enabled = var.public_network_access_enabled

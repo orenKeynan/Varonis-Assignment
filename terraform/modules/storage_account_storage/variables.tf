@@ -1,6 +1,6 @@
 variable "sa_name" {
   description = "Storage Account name"
-  type = string
+  type        = string
 }
 
 variable "resource_group_name" {
@@ -32,6 +32,6 @@ variable "network_subnet_ids" {
 
 variable "infrastructure_encryption_enabled" {
   description = "is the data is being encrypted or not"
-  type = bool
-  default = true
+  type        = bool
+  default     = true
 }

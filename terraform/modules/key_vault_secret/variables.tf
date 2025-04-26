@@ -22,35 +22,35 @@ variable "object_id" {
 
 variable "sku_name" {
   description = "SKU type to use"
-  type = string
-  default = "standard"
-  
+  type        = string
+  default     = "standard"
+
 }
 variable "secret_name" {
   description = "Key of Secret Name in keyvault"
-  type = string
-  default = null
+  type        = string
+  default     = null
 }
 variable "value" {
   description = "Value to store in keyvault"
-  type = string
-  default = null
+  type        = string
+  default     = null
 }
 
 variable "secret_permissions" {
   description = "List of permissions of 'secret'"
-  type = list(string)
-  default = ["Get", "Set", "List", "Delete"]
+  type        = list(string)
+  default     = ["Get", "Set", "List", "Delete"]
 }
 
 variable "certificate_permissions" {
   description = "List of permissions of 'cert'"
-  type = list(string)
-  default = ["Create", "Delete", "Get", "List", "Update"]
+  type        = list(string)
+  default     = ["Create", "Delete", "Get", "List", "Update"]
 }
 
 variable "key_permissions" {
   description = "List of permissions of 'key"
-  type = list(string)
-  default = ["Create", "Delete", "Get", "List", "Update"]
+  type        = list(string)
+  default     = ["Create", "Delete", "Get", "List", "Update"]
 }

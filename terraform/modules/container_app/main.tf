@@ -7,10 +7,10 @@ resource "azurerm_log_analytics_workspace" "logs" {
 }
 
 resource "azurerm_container_app_environment" "env" {
-  name                       = "${var.app_name}-env"
-  location                   = var.location
-  resource_group_name        = var.resource_group_name
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.logs.id
+  name                           = "${var.app_name}-env"
+  location                       = var.location
+  resource_group_name            = var.resource_group_name
+  log_analytics_workspace_id     = azurerm_log_analytics_workspace.logs.id
   internal_load_balancer_enabled = true
   infrastructure_subnet_id       = var.subnet_id
 }
@@ -33,8 +33,8 @@ resource "azurerm_container_app" "app" {
   }
 
   template {
-    min_replicas = var.min_replicas
-    max_replicas = var.max_replicas
+    min_replicas                     = var.min_replicas
+    max_replicas                     = var.max_replicas
     termination_grace_period_seconds = var.termination_grace_period_seconds
     container {
       name   = var.container_name
@@ -60,9 +60,9 @@ data "azurerm_monitor_diagnostic_categories" "app" {
 }
 
 resource "azurerm_monitor_diagnostic_setting" "to_sa" {
-  name                       = "diag-storage"
-  target_resource_id         = azurerm_container_app.app.id
-  storage_account_id         = var.logs_storage_account_id
+  name               = "diag-storage"
+  target_resource_id = azurerm_container_app.app.id
+  storage_account_id = var.logs_storage_account_id
   dynamic "enabled_log" {
     for_each = data.azurerm_monitor_diagnostic_categories.app.log_category_types
     content {

@@ -54,12 +54,12 @@ variable "tags" {
 
 variable "key_vault_id" {
   description = "ID of the Key Vaulr"
-  type = string
-  default = null
+  type        = string
+  default     = null
 }
 
 variable "admin_secret_name" {
   description = "The sql admin Secret name in KV"
-  type = string
-  default = null
+  type        = string
+  default     = null
 }

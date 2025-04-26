@@ -11,5 +11,5 @@ output "client_secret" {
 
 output "object_id" {
   description = "The generated object_id"
-  value = azuread_service_principal.this.object_id
+  value       = azuread_service_principal.this.object_id
 }

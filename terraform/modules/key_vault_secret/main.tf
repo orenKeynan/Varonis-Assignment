@@ -7,10 +7,10 @@ resource "azurerm_key_vault" "this" {
 }
 
 resource "azurerm_key_vault_access_policy" "tf_access" {
-  key_vault_id       = azurerm_key_vault.this.id
-  tenant_id          = var.tenant_id
-  object_id          = var.object_id
-  secret_permissions = var.secret_permissions
+  key_vault_id            = azurerm_key_vault.this.id
+  tenant_id               = var.tenant_id
+  object_id               = var.object_id
+  secret_permissions      = var.secret_permissions
   certificate_permissions = var.certificate_permissions
-  key_permissions = var.key_permissions
+  key_permissions         = var.key_permissions
 }

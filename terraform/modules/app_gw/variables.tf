@@ -1,6 +1,6 @@
 variable "app_gw_name" {
   description = "Application Gateway Name"
-  type = string
+  type        = string
 }
 
 variable "location" {
@@ -15,27 +15,27 @@ variable "resource_group_name" {
 
 variable "azurerm_public_fqdn" {
   description = "azure public fqdn"
-  type = string
+  type        = string
 }
 
 variable "azure_key_id" {
- description = "ID of Azure Key Vault"
- type = string
+  description = "ID of Azure Key Vault"
+  type        = string
 }
 
 variable "sku_name" {
   description = "App GW SKU."
-  type = string
+  type        = string
   #default = "WAF_v2"
 }
 variable "capacity" {
   description = "Instance count."
-  type = number
-  default = 1
+  type        = number
+  default     = 1
 }
 variable "subnet_id" {
-  description="Subnet for App GW."
-  type=string
+  description = "Subnet for App GW."
+  type        = string
 }
 
 variable "gw_ipcfg_name" {
@@ -56,7 +56,7 @@ variable "frontend_ip_configs" {
   description = "Public and/or private front-end IP configurations."
   type = map(object({
     name               = string
-    public_ip_id       = optional(string)  # supply one of public_ip_id OR subnet_id
+    public_ip_id       = optional(string) # supply one of public_ip_id OR subnet_id
     subnet_id          = optional(string)
     private_ip_address = optional(string)
   }))
@@ -65,8 +65,8 @@ variable "frontend_ip_configs" {
 variable "ssl_certs" {
   description = "Certificates (map for easy SNI future-proofing)."
   type = map(object({
-    name        = string
-    pfx_path    = string
+    name         = string
+    pfx_path     = string
     pfx_password = string
   }))
   default = {}
@@ -86,8 +86,8 @@ variable "backend_http_settings" {
   type = map(object({
     name                  = string
     port                  = number
-    protocol              = string       # Http or Https
-    cookie_based_affinity = string       # Enabled / Disabled
+    protocol              = string # Http or Https
+    cookie_based_affinity = string # Enabled / Disabled
     request_timeout       = number
   }))
 }
@@ -98,7 +98,7 @@ variable "http_listeners" {
     name                           = string
     frontend_ip_configuration_name = string
     frontend_port_name             = string
-    protocol                       = string   # Http / Https
+    protocol                       = string # Http / Https
     ssl_certificate_name           = optional(string)
     host_name                      = optional(string)
   }))

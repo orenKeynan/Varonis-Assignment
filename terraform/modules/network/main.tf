@@ -12,5 +12,5 @@ resource "azurerm_subnet" "this" {
   virtual_network_name = azurerm_virtual_network.this.name
   address_prefixes     = [each.value]
   # default = no endpoints for this subnet
-  service_endpoints = lookup(var.subnet_service_endpoints,each.key,[])
+  service_endpoints = lookup(var.subnet_service_endpoints, each.key, [])
 }
