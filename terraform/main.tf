@@ -61,9 +61,19 @@ module "acr" {
   sku                          = "Premium"
   resource_group_name          = local.rg_name
   location                     = local.location
-  admin_enabled                = false
-  public_network_access_enabled = false # possible only when sku = premium
+  admin_enabled                = true # Should be false and research how we can push
+  key_vault_id                 = module.kv_sql.key_vault_id # Not needed
+  admin_secret_name            = "acr-admin-pass"
+  public_network_access_enabled = true # should be false and set specific IPs. possible only when sku = premium
   tags = local.tags
+}
+
+module "service_account" {
+  source             = "./modules/service_account"
+  name               = "github-workflow-sp"
+  acr_id             = module.acr.acr_id
+  secret_length      = 20
+  secret_expire_hours = 168
 }
 
 module "network" {
