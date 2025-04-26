@@ -233,4 +233,15 @@ module "app_gw" {
       priority                   = 1
     }
   }
+  health_probes = [
+    {
+      name                    = "api-healthz"
+      protocol                = "Http"
+      path                    = "/healthz"
+      interval                = 15      # probe every 15s
+      timeout                 = 5       # wait up to 5s for a reply
+      unhealthy_threshold     = 2       # mark down after 2 failures
+      host = module.container_app.fqdn
+    }
+  ]
 }

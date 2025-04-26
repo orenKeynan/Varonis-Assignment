@@ -168,6 +168,27 @@ resource "azurerm_application_gateway" "this" {
       rule_set_version = var.waf_rule_set_version
     }
   }
+  dynamic "probe" {
+    for_each = var.health_probes
+    content {
+      name     = probe.value.name
+      protocol = probe.value.protocol
+      host     = lookup(probe.value, "host", null)
+      path     = lookup(probe.value, "path", null)
+      interval            = lookup(probe.value, "interval", 30)
+      timeout             = lookup(probe.value, "timeout", 120)
+      unhealthy_threshold = lookup(probe.value, "unhealthy_threshold", 3)
+      pick_host_name_from_backend_http_settings = lookup(
+        probe.value,
+        "pick_host_name_from_backend_http_settings",
+        false,
+      )
+
+      match {
+          status_code = probe.value.match != null ? probe.value.match.status_codes : ["200-399"]
+      }
+    }
+  }
 }
 
 resource "azurerm_monitor_diagnostic_setting" "appgw_access_logs_to_sa" {

@@ -166,3 +166,21 @@ variable "app_static_ip" {
   description = "The static ip of the Container app"
   type = string
 }
+
+variable "health_probes" {
+  description = "List of health probes to configure on the Application Gateway"
+  type = list(object({
+    name                                    = string
+    protocol                                = string                        # "Http" or "Https"
+    host                                    = optional(string)              # e.g. "my-app.internal"
+    path                                    = optional(string)              # e.g. "/healthz"
+    interval                                = optional(number)              # probe interval in seconds
+    timeout                                 = optional(number)              # probe timeout in seconds
+    unhealthy_threshold                     = optional(number)              # how many failures before marking unhealthy
+    pick_host_name_from_backend_http_settings = optional(bool)              # whether to reuse host from http-settings
+    match = optional(object({                                       # what status codes count as healthy
+      status_code = list(string)
+    }))
+  }))
+  default = []
+}
