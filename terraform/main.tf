@@ -128,7 +128,7 @@ module "container_app" {
   acr_username            = module.service_account.client_id
   secrets = {
     "acr-sp-secret"   = module.service_account.client_secret
-    "db_password"     = random_password.sql_admin.result # need to replace with non admin user
+    "db-password"     = random_password.sql_admin.result # need to replace with non admin user
   }
   acr_secret_name         = "acr-sp-secret"
   container_name          = "rest-api"
@@ -151,7 +151,7 @@ module "container_app" {
       value = local.sql_admin_user
     }
     DB_PASSWORD = {
-      secret_name = "db_password"
+      secret_name = "db-password"
     }
     PORT = {
       value = local.port
