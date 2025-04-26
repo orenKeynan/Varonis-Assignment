@@ -1,4 +1,5 @@
-# Varonis Assignment
+# Varonis Home Assignment
+
 ## Table of Contents
 
 - [Project Structure](#project-structure)
