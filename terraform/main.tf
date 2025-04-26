@@ -100,7 +100,7 @@ module "container_app" {
   cpu = 0.5
   memory = "1.0Gi"
   subnet_id = module.network.subnet_ids["app"]
-  image                     = "ghcr.io/you/restaurants:latest"
+  image                     = "varonishaacr.azurecr.io/restaurant-app:latest"
   logs_storage_account_id   = module.logs_storage.storage_account_id
 }
 
