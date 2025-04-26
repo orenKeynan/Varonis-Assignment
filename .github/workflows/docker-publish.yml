@@ -1,12 +1,6 @@
 name: Build & Push Image
 
 on:
-  # workflow_dispatch:
-  #   inputs:
-  #     tag:
-  #       description: 'Image tag (e.g., v1.0.0)'
-  #       required: true
-  #       default: 'v1.0.0'
   push:
     paths:
       - 'api-code/**'
@@ -40,11 +34,15 @@ jobs:
         id: short-sha
         with:
           length: 6
+      
+      - name: pwd
+        run: |
+          pwd
 
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: ./api-code/.
           push: true
           tags: varonishaacr.azurecr.io/restaurant-app:${{ env.SHA }}
         env:
