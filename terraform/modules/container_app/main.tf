@@ -20,7 +20,6 @@ resource "azurerm_container_app" "app" {
   container_app_environment_id = azurerm_container_app_environment.env.id
   resource_group_name          = var.resource_group_name
   revision_mode                = "Single"
-
   secret {
     name  = var.acr_secret_name
     value = var.acr_secret_value
@@ -31,7 +30,14 @@ resource "azurerm_container_app" "app" {
     username             = var.acr_username
     password_secret_name = var.acr_secret_name
   }
-
+  ingress {
+      target_port      = var.port
+      external_enabled = false
+      traffic_weight {
+        percentage = 100
+        latest_revision = true 
+      }
+  }
   template {
     min_replicas                     = var.min_replicas
     max_replicas                     = var.max_replicas
@@ -63,10 +69,7 @@ resource "azurerm_monitor_diagnostic_setting" "to_sa" {
   name               = "diag-storage"
   target_resource_id = azurerm_container_app.app.id
   storage_account_id = var.logs_storage_account_id
-  dynamic "enabled_log" {
-    for_each = data.azurerm_monitor_diagnostic_categories.app.log_category_types
-    content {
-      category = enabled_log.value
-    }
+  enabled_log {
+      category = "AuditEvent"
   }
 }

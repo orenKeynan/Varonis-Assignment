@@ -122,6 +122,7 @@ module "container_app" {
   acr_secret_name         = "acr-sp-secret"
   acr_secret_value        = module.service_account.client_secret
   container_name          = "rest-api"
+  port                    = 8000
   cpu                     = 0.5
   memory                  = "1.0Gi"
   subnet_id               = module.network.subnet_ids["app"]
@@ -161,7 +162,7 @@ module "app_gw" {
   }
 
   backend_pools = {
-    api = { name = "api", fqdns = [module.container_app.container_app_fqdn] }
+    api = { name = "api", fqdn = [module.container_app.container_app_fqdn] }
   }
 
   backend_http_settings = {
