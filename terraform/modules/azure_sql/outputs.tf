@@ -7,3 +7,8 @@ output "database_id" {
   description = "SQL Database ID"
   value       = azurerm_mssql_database.this.id
 }
+
+output "database_name" {
+  description = "Sql Database Name"
+  value = azurerm_mssql_database.this.name
+}

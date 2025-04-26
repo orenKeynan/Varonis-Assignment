@@ -29,8 +29,8 @@ app = FastAPI(title="Restaurant Recommendation API",
               description="API for querying and recommending restaurants based on various criteria")
 
 # Database connection details
-DB_SERVER = os.environ.get("DB_SERVER", "varonis-sql.database.windows.net")
-DB_NAME = os.environ.get("DB_NAME", "restaurants_db")
+DB_SERVER = os.environ.get("DB_SERVER")
+DB_NAME = os.environ.get("DB_NAME")
 DB_USERNAME = os.environ.get("DB_USERNAME")
 DB_PASSWORD = os.environ.get("DB_PASSWORD")
 

@@ -8,6 +8,7 @@ locals {
     environment = "dev"
     owner       = "oren"
   }
+  sql_admin_pass = "sqladmin"
 }
 
 module "rg" {
@@ -44,7 +45,7 @@ module "azure_sql" {
   key_vault_id                 = module.kv_sql.key_vault_id
   sql_server_name              = "varonis-sql"
   admin_secret_name            = "sqladmin"
-  administrator_login          = "sqladmin"
+  administrator_login          = local.sql_admin_pass
   administrator_login_password = random_password.sql_admin.result
   database_name                = "restaurants"
   sku_name                     = "GP_S_Gen5_1"
@@ -126,7 +127,7 @@ module "container_app" {
   acr_username            = module.service_account.client_id
   secrets = {
     "acr-sp-secret"   = module.service_account.client_secret
-    "db_password"     = random_password.sql_admin # need to replace
+    "db_password"     = random_password.sql_admin # need to replace with non admin user
   }
   acr_secret_name         = "acr-sp-secret"
   container_name          = "rest-api"
@@ -138,6 +139,20 @@ module "container_app" {
   allow_insecure_connection = true
   client_certificate_mode = "ignore"
   external_enabled        = true
+  env = {
+    DB_SERVER = {
+      value = module.azure_sql.server_fqdn
+    }
+    DB_NAME = {
+      value = module.azure_sql.database_name
+    }
+    DB_NAME = {
+      value = module.azure_sql.database_name
+    }
+    DB_PASSWORD = {
+      secret_name = "db_password"
+    }
+  }
 
   liveness_probe = {
     path                  = "/healthz"

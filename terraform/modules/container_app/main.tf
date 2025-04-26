@@ -56,8 +56,9 @@ resource "azurerm_container_app" "app" {
         dynamic "env" {
           for_each = var.env
           content {
-            name  = env.key
-            value = env.value
+            name        = env.key
+            value       = try(env.value.value, null)
+            secret_name = try(env.value.secret_name, null)
           }
         }
         liveness_probe {
