@@ -89,6 +89,7 @@ variable "backend_http_settings" {
     protocol              = string # Http or Https
     cookie_based_affinity = string # Enabled / Disabled
     request_timeout       = number
+    probe_name            = optional(string, null)
   }))
 }
 

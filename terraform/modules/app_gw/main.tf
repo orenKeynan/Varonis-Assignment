@@ -120,6 +120,7 @@ resource "azurerm_application_gateway" "this" {
       protocol              = backend_http_settings.value.protocol
       cookie_based_affinity = backend_http_settings.value.cookie_based_affinity
       request_timeout       = backend_http_settings.value.request_timeout
+      probe_name            = backend_http_settings.value.probe_name
     }
   }
 

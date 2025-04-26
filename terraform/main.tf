@@ -211,6 +211,7 @@ module "app_gw" {
       protocol              = "Http"
       cookie_based_affinity = "Disabled"
       request_timeout       = 30
+      probe_name            = "api-healthz"
     }
   }
 
