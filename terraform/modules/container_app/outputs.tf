@@ -8,10 +8,6 @@ output "container_app_env_id" {
   value       = azurerm_container_app_environment.env.id
 }
 
-output "outbound_ip_addresses" {
-  value = azurerm_container_app.app.outbound_ip_addresses
-}
-
 output "fqdn" {
   value = azurerm_container_app.app.ingress[0].fqdn
 }

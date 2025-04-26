@@ -90,6 +90,7 @@ variable "backend_http_settings" {
     cookie_based_affinity = string # Enabled / Disabled
     request_timeout       = number
     probe_name            = optional(string, null)
+    pick_host_name_from_backend_address = optional(bool, false)
   }))
 }
 

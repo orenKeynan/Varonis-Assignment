@@ -121,6 +121,7 @@ resource "azurerm_application_gateway" "this" {
       cookie_based_affinity = backend_http_settings.value.cookie_based_affinity
       request_timeout       = backend_http_settings.value.request_timeout
       probe_name            = backend_http_settings.value.probe_name
+      pick_host_name_from_backend_address = backend_http_settings.value.pick_host_name_from_backend_address
     }
   }
 

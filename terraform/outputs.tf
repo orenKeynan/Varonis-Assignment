@@ -14,10 +14,6 @@ output "application_gateway_fqdn" {
   value       = azurerm_public_ip.pip.fqdn
 }
 
-output "outbound_ip_addresses" {
-  value = module.container_app.outbound_ip_addresses
-}
-
 output "container_fqdn" {
   value = module.container_app.fqdn
 }

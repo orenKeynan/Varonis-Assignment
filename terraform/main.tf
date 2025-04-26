@@ -212,6 +212,7 @@ module "app_gw" {
       cookie_based_affinity = "Disabled"
       request_timeout       = 30
       probe_name            = "api-healthz"
+      pick_host_name_from_backend_address = true
     }
   }
 
