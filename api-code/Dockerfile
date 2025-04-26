@@ -16,8 +16,13 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Create a non-root user
+# create a non-root group & user
 RUN groupadd --system restgroup \
-    && useradd --system --gid appgroup --shell /usr/sbin/nologin --home-dir /app restuser
+ && useradd  --system \
+             --gid restgroup \
+             --shell /usr/sbin/nologin \
+             --home-dir /app \
+             restuser
 
 # Set working dir and install Python deps
 WORKDIR /app

@@ -152,9 +152,9 @@ module "container_app" {
   cpu                       = 0.5
   memory                    = "1Gi"
   subnet_id                 = module.network.subnet_ids["app"]
-  image                     = "varonishaacr.azurecr.io/restaurant-app:14" # To release a new version, change this
+  image                     = "varonishaacr.azurecr.io/restaurant-app:16" # To release a new version, change this
   allow_insecure_connection = true
-  client_certificate_mode   = "ignore"
+  client_certificate_mode   = "ignore" # TLS termination is done on the app gw, all internal communication is done with HTTP
   external_enabled          = true
   env = {
     DB_SERVER = {
