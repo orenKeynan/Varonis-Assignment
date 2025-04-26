@@ -1,29 +1,33 @@
 FROM python:3.11-slim
 
-# Install ODBC Driver and dependencies
-RUN apt-get update && apt-get install -y \
-    unixodbc \
-    unixodbc-dev \
-    gnupg \
-    curl \
-    ca-certificates \
-    lsb-release \
-    && rm -rf /var/lib/apt/lists/*
 
-# Add Microsoft repository for ODBC Driver using the recommended approach
-RUN curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /usr/share/keyrings/microsoft-keyring.gpg \
-    && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/microsoft-keyring.gpg] https://packages.microsoft.com/debian/$(lsb_release -rs)/prod $(lsb_release -cs) main" > /etc/apt/sources.list.d/mssql-release.list \
+# Install system deps + Microsoft ODBC driver, then clean up
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        unixodbc unixodbc-dev gnupg curl ca-certificates lsb-release \
+    && curl -fsSL https://packages.microsoft.com/keys/microsoft.asc \
+        | gpg --dearmor -o /usr/share/keyrings/microsoft-keyring.gpg \
+    && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/microsoft-keyring.gpg] \
+        https://packages.microsoft.com/debian/$(lsb_release -rs)/prod \
+        $(lsb_release -cs) main" \
+        > /etc/apt/sources.list.d/mssql-release.list \
     && apt-get update \
-    && ACCEPT_EULA=Y apt-get install -y msodbcsql17 \
+    && ACCEPT_EULA=Y apt-get install -y --no-install-recommends msodbcsql17 \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app
+# Create a non-root user
+RUN groupadd --system restgroup \
+    && useradd --system --gid appgroup --shell /usr/sbin/nologin --home-dir /app restuser
 
-# Copy and install requirements first for better caching
+# Set working dir and install Python deps
+WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
+# Copy the application code, fix permissions, and switch to non-root
 COPY main.py .
+RUN chown -R restuser:restgroup /app
+USER restuser
 
-CMD ["python3", "main.py"]
+# Run the app
+ENTRYPOINT ["python3", "main.py"]
