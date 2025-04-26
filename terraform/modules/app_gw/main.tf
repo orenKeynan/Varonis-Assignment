@@ -169,4 +169,9 @@ resource "azurerm_monitor_diagnostic_setting" "appgw_access_logs_to_sa" {
   enabled_log {
     category = "ApplicationGatewayAccessLog"
   }
+
+  metric {
+    category = "AllMetrics"
+    enabled = false
+  }
 }

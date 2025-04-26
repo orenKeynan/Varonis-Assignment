@@ -8,13 +8,12 @@ output "container_app_env_id" {
   value       = azurerm_container_app_environment.env.id
 }
 
-output "container_app_fqdn" {
-  description = "Public FQDN of the latest revision (changes on every deployment)."
-  value       = azurerm_container_app.app.latest_revision_fqdn
+output "outbound_ip_addresses" {
+  value = azurerm_container_app.app.outbound_ip_addresses
 }
 
-output "container_app_real_fqdn" {
-  value = azurerm_container_app.app.custom_domain_verification_id
+output "fqdn" {
+  value = azurerm_container_app.app.ingress[0].fqdn
 }
 
 output "container_app_identity_principal_id" {

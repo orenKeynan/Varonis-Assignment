@@ -176,13 +176,13 @@ module "app_gw" {
   }
 
   backend_pools = {
-    api = { name = "api", fqdns = [module.container_app.container_app_fqdn] }
+    api = { name = "api", fqdns = [module.container_app.fqdn] }
   }
 
   backend_http_settings = {
     api = {
       name                  = "api"
-      port                  = 8000
+      port                  = 80
       protocol              = "Http"
       cookie_based_affinity = "Disabled"
       request_timeout       = 30
