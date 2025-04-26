@@ -73,3 +73,4 @@ async def root():
     Returns HTTP 200 with a simple JSON payload if the app is up.
     """
     return {"status": "ok"}
+
