@@ -71,9 +71,14 @@ module "acr" {
 module "service_account" {
   source             = "./modules/service_account"
   name               = "github-workflow-sp"
-  acr_id             = module.acr.acr_id
   secret_length      = 20
   secret_expire_hours = 168
+}
+
+resource "azurerm_role_assignment" "acr_push" {
+  scope                = module.acr.acr_id
+  role_definition_name = "AcrPush"
+  principal_id         = module.service_account.object_id
 }
 
 module "network" {

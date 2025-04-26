@@ -8,3 +8,8 @@ output "client_secret" {
   value       = azuread_service_principal_password.this.value
   sensitive   = true
 }
+
+output "object_id" {
+  description = "The generated object_id"
+  value = azuread_service_principal.this.object_id
+}

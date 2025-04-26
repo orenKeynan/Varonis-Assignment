@@ -12,11 +12,5 @@ resource "random_password" "secret" {
 }
 
 resource "azuread_service_principal_password" "this" {
-  service_principal_id = azuread_service_principal.this.object_id
-}
-
-resource "azurerm_role_assignment" "acr_push" {
-  scope                = var.acr_id
-  role_definition_name = "AcrPush"
-  principal_id         = azuread_service_principal.this.object_id
+  service_principal_id = azuread_service_principal.this.id
 }
