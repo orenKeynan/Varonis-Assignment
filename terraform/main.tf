@@ -126,7 +126,7 @@ module "container_app" {
   cpu                     = 0.5
   memory                  = "1Gi"
   subnet_id               = module.network.subnet_ids["app"]
-  image                   = "varonishaacr.azurecr.io/restaurant-app:latest"
+  image                   = "varonishaacr.azurecr.io/restaurant-app:5245cf"
 }
 
 resource "azurerm_public_ip" "pip" {
