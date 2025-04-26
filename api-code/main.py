@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from typing import Optional, List
 from datetime import datetime
 
+
 class Restaurant(BaseModel):
     name: str
     style: str
