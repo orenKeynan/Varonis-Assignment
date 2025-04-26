@@ -22,7 +22,6 @@ variable "registration_enabled" {
 variable "private_dns_a_records" {
   description = "Map of private DNS A records to create."
   type = map(object({
-    name                = string
     ttl                 = optional(number, 60)
     records             = string
   }))
