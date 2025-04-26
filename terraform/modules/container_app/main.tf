@@ -21,6 +21,17 @@ resource "azurerm_container_app" "app" {
   resource_group_name          = var.resource_group_name
   revision_mode                = "Single"
 
+  secret {
+    name  = var.acr_secret_name
+    value = var.acr_secret_value
+  }
+
+  registry {
+    server               = var.acr_login_server
+    username             = var.acr_username
+    password_secret_name = var.acr_secret_name
+  }
+
   template {
     min_replicas = var.min_replicas
     max_replicas = var.max_replicas

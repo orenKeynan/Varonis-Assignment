@@ -80,3 +80,23 @@ variable "termination_grace_period_seconds" {
     type = number
     default = 60
 }
+
+variable "acr_secret_name" {
+  description = "ACR Secret value name"
+  type = string
+}
+
+variable "acr_secret_value" {
+  description = "ACR Secret value value"
+  type = string
+}
+
+variable "acr_login_server" {
+  description = "ACR Login Server"
+  type = string
+}
+
+variable "acr_username" {
+  description = "ACR Username"
+  type = string
+}
