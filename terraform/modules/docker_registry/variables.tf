@@ -63,3 +63,8 @@ variable "admin_secret_name" {
   type        = string
   default     = null
 }
+
+variable "service_account_id" {
+  description = "Service Account ID"
+  type = string
+}

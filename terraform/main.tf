@@ -19,6 +19,8 @@ module "rg" {
   tags     = local.tags
 }
 
+########################
+# Creationg of network related conponents
 
 module "network" {
   source              = "./modules/network"
@@ -43,7 +45,10 @@ module "network" {
   }
 }
 
-# create password for sql admin user
+
+##################
+# Creation of related sql components
+
 resource "random_password" "sql_admin" {
   length  = 12
   special = true
@@ -97,19 +102,8 @@ module "azure_sql" {
 }
 
 
-module "acr" {
-  source                        = "./modules/docker_registry" # adjust path as needed
-  acr_name                      = "varonishaacr"
-  sku                           = "Premium"
-  resource_group_name           = local.rg_name
-  location                      = local.location
-  admin_enabled                 = true                       # Should be false and research how we can push
-  key_vault_id                  = module.kv_sql.key_vault_id # Not needed
-  admin_secret_name             = "acr-admin-pass"
-  public_network_access_enabled = true # should be false and set specific IPs. possible only when sku = premium
-  tags                          = local.tags
-}
-
+###################
+# Creation of ACR related resources
 module "service_account" {
   source              = "./modules/service_account"
   name                = "acr_user"
@@ -117,18 +111,22 @@ module "service_account" {
   secret_expire_hours = 168
 }
 
-resource "azurerm_role_assignment" "acr_push" {
-  scope                = module.acr.acr_id
-  role_definition_name = "AcrPush"
-  principal_id         = module.service_account.object_id
+module "acr" {
+  source                        = "./modules/docker_registry"
+  acr_name                      = "varonishaacr"
+  sku                           = "Premium"
+  resource_group_name           = local.rg_name
+  location                      = local.location
+  service_account_id            = module.service_account.object_id
+  admin_enabled                 = true                       # Should be false and research how we can push
+  key_vault_id                  = module.kv_sql.key_vault_id # Not needed
+  admin_secret_name             = "acr-admin-pass"
+  public_network_access_enabled = true # should be false and set specific IPs. possible only when sku = premium
+  tags                          = local.tags
 }
 
-resource "azurerm_role_assignment" "acr_pull" {
-  scope                = module.acr.acr_id
-  role_definition_name = "AcrPull"
-  principal_id         = module.service_account.object_id
-}
-
+########################
+# Create container app related resources
 module "logs_storage" {
   source              = "./modules/storage_account_storage"
   resource_group_name = local.rg_name
@@ -192,12 +190,12 @@ module "container_app" {
   }
 }
 
-
-module "pdns_app_gw_to_container_app" {
+module "pdns_container_app" {
   source              = "./modules/private_dns"
   pdns_name           = module.container_app.default_domain
   virtual_network_id  = module.network.vnet_id
   resource_group_name = local.rg_name
+  registration_enabled = false
   # Using https://learn.microsoft.com/en-us/azure/container-apps/waf-app-gateway?tabs=default-domain#retrieve-your-container-apps-domain
   # to connect the appgateway to the private app subnet
   private_dns_a_records = {
@@ -209,6 +207,9 @@ module "pdns_app_gw_to_container_app" {
     }
   }
 }
+
+#################
+# Create related app gateway
 
 resource "azurerm_public_ip" "pip" {
   name                = "rest"

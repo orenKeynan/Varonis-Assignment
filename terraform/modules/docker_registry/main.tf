@@ -28,3 +28,15 @@ resource "azurerm_key_vault_secret" "acr_admin" {
   key_vault_id = var.key_vault_id
   value        = azurerm_container_registry.this.admin_password
 }
+
+resource "azurerm_role_assignment" "acr_push" {
+  scope                = azurerm_container_registry.this.id
+  role_definition_name = "AcrPush"
+  principal_id         = var.service_account_id
+}
+
+resource "azurerm_role_assignment" "acr_pull" {
+  scope                = azurerm_container_registry.this.id
+  role_definition_name = "AcrPull"
+  principal_id         = var.service_account_id
+}
