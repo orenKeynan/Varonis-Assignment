@@ -24,7 +24,7 @@ resource "random_password" "sql_admin" {
 }
 
 module "kv_sql" {
-  source              = "./modules/key_vault_secret"
+  source              = "./modules/key_vault"
   key_vault_name      = "kv-sql-varonis-sql"
   object_id           = data.azurerm_client_config.this.object_id
   tenant_id           = data.azurerm_client_config.this.tenant_id
@@ -181,7 +181,6 @@ module "app_gw" {
       frontend_ip_configuration_name = "public"
       frontend_port_name             = "https"
       protocol                       = "Https"
-      ssl_certificate_name           = "kv-cert"
     }
   }
 

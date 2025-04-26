@@ -70,6 +70,6 @@ resource "azurerm_monitor_diagnostic_setting" "to_sa" {
   target_resource_id = azurerm_container_app.app.id
   storage_account_id = var.logs_storage_account_id
   enabled_log {
-      category = "AuditEvent"
+      category = "allLogs"
   }
 }

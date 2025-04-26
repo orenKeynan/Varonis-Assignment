@@ -113,7 +113,7 @@ resource "azurerm_application_gateway" "this" {
       frontend_ip_configuration_name = http_listener.value.frontend_ip_configuration_name
       frontend_port_name             = http_listener.value.frontend_port_name
       protocol                       = http_listener.value.protocol
-      ssl_certificate_name           = lookup(http_listener.value, "ssl_certificate_name", null)
+      ssl_certificate_name           = "${var.app_gw_name}-ss-cert"
       host_name                      = lookup(http_listener.value, "host_name", null)
     }
   }
