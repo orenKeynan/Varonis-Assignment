@@ -124,8 +124,11 @@ module "container_app" {
   resource_group_name     = local.rg_name
   acr_login_server        = module.acr.login_server
   acr_username            = module.service_account.client_id
+  secrets = {
+    "acr-sp-secret"   = module.service_account.client_secret
+    "db_password"     = random_password.sql_admin # need to replace
+  }
   acr_secret_name         = "acr-sp-secret"
-  acr_secret_value        = module.service_account.client_secret
   container_name          = "rest-api"
   port                    = 8000
   cpu                     = 0.5

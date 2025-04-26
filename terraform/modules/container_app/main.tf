@@ -20,10 +20,14 @@ resource "azurerm_container_app" "app" {
   container_app_environment_id = azurerm_container_app_environment.env.id
   resource_group_name          = var.resource_group_name
   revision_mode                = "Single"
-  secret {
-    name  = var.acr_secret_name
-    value = var.acr_secret_value
+  dynamic "secret" {
+    for_each = var.secrets
+    content {
+      name  = secret.key
+      value = secret.value
+    }
   }
+
 
   registry {
     server               = var.acr_login_server

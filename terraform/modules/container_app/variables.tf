@@ -81,10 +81,6 @@ variable "acr_secret_name" {
   type        = string
 }
 
-variable "acr_secret_value" {
-  description = "ACR Secret value value"
-  type        = string
-}
 
 variable "acr_login_server" {
   description = "ACR Login Server"
@@ -132,4 +128,10 @@ variable "readiness_probe" {
     transport               = string
     port                    = number
   })
+}
+
+variable "secrets" {
+  description = "Map of secret-name => secret-value to inject into the container app"
+  type        = map(string)
+  default     = {}
 }
