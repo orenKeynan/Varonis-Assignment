@@ -64,3 +64,12 @@ async def healthz():
     Returns HTTP 200 with a simple JSON payload if the app is up.
     """
     return {"status": "ok"}
+
+
+@app.get("/")
+async def root():
+    """
+    Health check endpoint. 
+    Returns HTTP 200 with a simple JSON payload if the app is up.
+    """
+    return {"status": "ok"}
