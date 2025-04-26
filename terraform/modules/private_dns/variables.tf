@@ -23,7 +23,7 @@ variable "private_dns_a_records" {
   description = "Map of private DNS A records to create."
   type = map(object({
     ttl                 = optional(number, 60)
-    records             = string
+    records             = set(string)
   }))
   default = {}
 }

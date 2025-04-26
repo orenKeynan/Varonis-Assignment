@@ -95,8 +95,13 @@ module "network" {
   address_space       = ["10.42.0.0/16"]
 
   subnets = {
-    appgw = "10.42.0.0/23"
-    app   = "10.42.2.0/23"
+    appgw = {
+      ip = "10.42.0.0/23"
+    }
+    app   = {
+      ip = "10.42.2.0/23"
+      private_link_service_network_policies_enabled = false
+    }
   }
 
   subnet_service_endpoints = {
@@ -150,12 +155,14 @@ module "pdns" {
   pdns_name = module.container_app.default_domain
   virtual_network_id = module.network.vnet_id
   resource_group_name = local.rg_name
+  # Using https://learn.microsoft.com/en-us/azure/container-apps/waf-app-gateway?tabs=default-domain#retrieve-your-container-apps-domain
+  # to connect the appgateway to the private app subnet
   private_dns_a_records = {
-    "*." = {
-      records             = module.container_app.static_ip
+    "*" = {
+      records             = [module.container_app.static_ip]
     }
     "@" = {
-      records             = module.container_app.static_ip
+      records             = [module.container_app.static_ip]
     }
   }
 }
