@@ -57,4 +57,10 @@ async def get_recommendation(
     # return the first match
     return {"restaurantRecommendation": filtered[0].dict()}
 
-# To run locally: uvicorn main:app --host 0.0.0.0 --port 8000
+@app.get("/healthz")
+async def healthz():
+    """
+    Health check endpoint. 
+    Returns HTTP 200 with a simple JSON payload if the app is up.
+    """
+    return {"status": "ok"}

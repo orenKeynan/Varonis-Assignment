@@ -161,7 +161,7 @@ module "app_gw" {
   }
 
   backend_pools = {
-    api = { name = "api", fqdn = [module.container_app.container_app_fqdn] }
+    api = { name = "api", fqdns = [module.container_app.container_app_fqdn] }
   }
 
   backend_http_settings = {
