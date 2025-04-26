@@ -139,10 +139,7 @@ module "logs_storage" {
 ### Creat the remote backend for the terraform state
 resource "azurerm_storage_container" "tfbackend" {
   name                  = "tfstate"
-  storage_account_id  = module.logs_storage.storage_account_id
-  # Using container this I'm running "terraform apply" locally from my laptop.
-  # If it was part of a CI flow that runs the workload as part of the Vnet,
-  # would use "private" access and private endpoint access
+  storage_account_id    = module.logs_storage.storage_account_id
   container_access_type = "private"
 }
 
@@ -170,8 +167,8 @@ module "container_app" {
   memory                    = "1Gi"
   subnet_id                 = module.network.subnet_ids["app"]
   image                     = "varonishaacr.azurecr.io/restaurant-app:17" # To release a new version, change this
-  allow_insecure_connection = true # TLS termination is done on the app gw, all internal communication is done with HTTP
-  client_certificate_mode   = "ignore" 
+  allow_insecure_connection = true                                        # TLS termination is done on the app gw, all internal communication is done with HTTP
+  client_certificate_mode   = "ignore"
   external_enabled          = true
   env = {
     DB_SERVER = {
@@ -208,10 +205,10 @@ module "container_app" {
 }
 
 module "pdns_container_app" {
-  source              = "./modules/private_dns"
-  pdns_name           = module.container_app.default_domain
-  virtual_network_id  = module.network.vnet_id
-  resource_group_name = local.rg_name
+  source               = "./modules/private_dns"
+  pdns_name            = module.container_app.default_domain
+  virtual_network_id   = module.network.vnet_id
+  resource_group_name  = local.rg_name
   registration_enabled = false
   # Using https://learn.microsoft.com/en-us/azure/container-apps/waf-app-gateway?tabs=default-domain#retrieve-your-container-apps-domain
   # to connect the appgateway to the private app subnet

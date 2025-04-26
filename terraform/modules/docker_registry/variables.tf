@@ -66,5 +66,5 @@ variable "admin_secret_name" {
 
 variable "service_account_id" {
   description = "Service Account ID"
-  type = string
+  type        = string
 }

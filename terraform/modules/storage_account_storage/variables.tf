@@ -35,3 +35,15 @@ variable "infrastructure_encryption_enabled" {
   type        = bool
   default     = true
 }
+
+variable "default_action" {
+  description = "What action to do in case it doesn't exists in a rule"
+  type        = string
+  default     = "Deny"
+}
+
+variable "bypass" {
+  description = "What traffic is bypassed"
+  type        = list(string)
+  default     = ["AzureServices"]
+}

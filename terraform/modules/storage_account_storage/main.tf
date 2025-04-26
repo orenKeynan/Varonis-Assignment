@@ -15,9 +15,9 @@ resource "azurerm_storage_account" "this" {
 
   # Network lockdown so only your VNet / Azure services can write logs  
   network_rules {
-    default_action             = "Deny"
-    bypass                     = ["AzureServices"]
+    default_action             = var.default_action
+    bypass                     = var.bypass
     virtual_network_subnet_ids = var.network_subnet_ids
-    ip_rules = ["77.125.68.241"] # My IP (for now).
+    ip_rules                   = ["77.125.68.241"] # My IP (for now).
   }
 }
