@@ -28,4 +28,4 @@ jobs:
         with:
           context: ./api-code/.
           push: true
-          tags: varonishaacr.azurecr.io/restaurant-app:${{ env.BUILD_NUMBER }}
+          tags: varonishaacr.azurecr.io/restaurant-app:${{github.run_number}}
