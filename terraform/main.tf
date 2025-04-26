@@ -166,7 +166,7 @@ module "container_app" {
   cpu                       = 0.5
   memory                    = "1Gi"
   subnet_id                 = module.network.subnet_ids["app"]
-  image                     = "varonishaacr.azurecr.io/restaurant-app:17" # To release a new version, change this
+  image                     = "varonishaacr.azurecr.io/restaurant-app:21" # To release a new version, change this
   allow_insecure_connection = true                                        # TLS termination is done on the app gw, all internal communication is done with HTTP
   client_certificate_mode   = "ignore"
   external_enabled          = true
@@ -211,7 +211,7 @@ module "pdns_container_app" {
   resource_group_name  = local.rg_name
   registration_enabled = false
   # Using https://learn.microsoft.com/en-us/azure/container-apps/waf-app-gateway?tabs=default-domain#retrieve-your-container-apps-domain
-  # to connect the appgateway to the private app subnet
+  # to connect the appgateway to container app
   private_dns_a_records = {
     "*" = {
       records = [module.container_app.static_ip]

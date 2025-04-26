@@ -52,3 +52,4 @@ Basic diagram that shows the general flow of what resources I created and how th
 7. Exposing 2 APIs: <br>
     7.1. "/restaurants": Printing all restaurants, no filtering. <br>
     7.2. "/recommendation": Printing filtered restaurants.
+8. CD is done using Terraform using a manual update of the image tag and running "terraform apply"
