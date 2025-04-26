@@ -34,6 +34,8 @@ DB_SERVER = os.environ.get("DB_SERVER")
 DB_NAME = os.environ.get("DB_NAME")
 DB_USERNAME = os.environ.get("DB_USERNAME")
 DB_PASSWORD = os.environ.get("DB_PASSWORD")
+CONN_TIMEOUT = os.environ.get("CONN_TIMEOUT", 30)
+ENCRYPT = os.environ.get("ENCRYPT", "yes")
 
 # Connection pool for better performance and reliability
 CONNECTION_POOL = []
@@ -52,7 +54,8 @@ def get_db_connection():
             pass
     
     # Create new connection
-    connection_string = f"DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={DB_SERVER};DATABASE={DB_NAME};UID={DB_USERNAME};PWD={DB_PASSWORD};Connection Timeout=30;Encrypt=yes;TrustServerCertificate=no"
+    # not trusting Server Cert since not a real production
+    connection_string = f"DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={DB_SERVER};DATABASE={DB_NAME};UID={DB_USERNAME};PWD={DB_PASSWORD};Connection Timeout={CONN_TIMEOUT};Encrypt={ENCRYPT};TrustServerCertificate=no"
     try:
         conn = pyodbc.connect(connection_string)
         return conn
