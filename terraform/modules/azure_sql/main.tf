@@ -10,6 +10,7 @@ resource "azurerm_mssql_server" "this" {
   resource_group_name          = var.resource_group_name
   location                     = var.location
   version                      = var.sql_version
+  public_network_access_enabled= var.public_network_access_enabled
   administrator_login          = var.administrator_login
   administrator_login_password = var.administrator_login_password
   minimum_tls_version          = var.minimum_tls_version
@@ -32,10 +33,18 @@ resource "azurerm_mssql_database" "this" {
   }
 }
 
-# resource "azurerm_mssql_firewall_rule" "rules" {
-#   for_each         = var.firewall_rules
-#   name             = each.key
-#   server_id        = azurerm_mssql_server.this.id
-#   start_ip_address = each.value.start_ip
-#   end_ip_address   = each.value.end_ip
-# }
+
+resource "azurerm_private_endpoint" "sql" {
+  for_each            = var.private_endpoints
+  name                = "${var.sql_server_name}-${each.key}-endpoint"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  subnet_id           = each.value
+
+  private_service_connection {
+    name                           = "${var.sql_server_name}-${each.key}-privateserviceconnection"
+    private_connection_resource_id = azurerm_mssql_server.this.id
+    subresource_names              = ["sqlServer"]
+    is_manual_connection           = false
+  }
+}

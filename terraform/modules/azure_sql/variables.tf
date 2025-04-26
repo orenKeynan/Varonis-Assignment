@@ -97,11 +97,15 @@ variable "admin_secret_name" {
   type        = string
 }
 
-# variable "firewall_rules" {
-#   description = "Map of firewall rules to add to the server (key = rule name)."
-#   type = map(object({
-#     start_ip = string
-#     end_ip   = string
-#   }))
-#   default = {}
-# }
+variable "public_network_access_enabled" {
+  description = "Enable public network"
+  type = bool
+  default = false
+}
+
+
+variable "private_endpoints" {
+  description = "Map of logical name → subnet ID to create one private endpoint per subnet"
+  type        = map(string)
+  default     = {}
+}

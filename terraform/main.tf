@@ -19,6 +19,30 @@ module "rg" {
   tags     = local.tags
 }
 
+
+module "network" {
+  source              = "./modules/network"
+  vnet_name           = "rest-vnet"
+  location            = local.location
+  resource_group_name = local.rg_name
+  address_space       = ["10.42.0.0/16"]
+
+  subnets = {
+    appgw = {
+      ip = "10.42.0.0/23"
+    }
+    app   = {
+      ip = "10.42.2.0/23"
+      private_link_service_network_policies_enabled = false
+    }
+  }
+
+  subnet_service_endpoints = {
+    appgw = ["Microsoft.Storage"]
+    app = ["Microsoft.Sql"]
+  }
+}
+
 # create password for sql admin user
 resource "random_password" "sql_admin" {
   length  = 12
@@ -43,6 +67,9 @@ module "azure_sql" {
   tenant_id                    = data.azurerm_client_config.this.tenant_id
   object_id                    = data.azurerm_client_config.this.object_id
   tags                         = local.tags
+  private_endpoints = {
+    app   = module.network.subnet_ids["app"]
+  }
   key_vault_id                 = module.kv_sql.key_vault_id
   sql_server_name              = "varonis-sql"
   admin_secret_name            = "sqladmin"
@@ -89,28 +116,6 @@ resource "azurerm_role_assignment" "acr_pull" {
   principal_id         = module.service_account.object_id
 }
 
-module "network" {
-  source              = "./modules/network"
-  vnet_name           = "rest-vnet"
-  location            = local.location
-  resource_group_name = local.rg_name
-  address_space       = ["10.42.0.0/16"]
-
-  subnets = {
-    appgw = {
-      ip = "10.42.0.0/23"
-    }
-    app   = {
-      ip = "10.42.2.0/23"
-      private_link_service_network_policies_enabled = false
-    }
-  }
-
-  subnet_service_endpoints = {
-    appgw = ["Microsoft.Storage"]
-  }
-}
-
 module "logs_storage" {
   source              = "./modules/storage_account_storage"
   resource_group_name = local.rg_name
@@ -136,7 +141,7 @@ module "container_app" {
   cpu                     = 0.5
   memory                  = "1Gi"
   subnet_id               = module.network.subnet_ids["app"]
-  image                   = "varonishaacr.azurecr.io/restaurant-app:9"
+  image                   = "varonishaacr.azurecr.io/restaurant-app:13"
   allow_insecure_connection = true
   client_certificate_mode = "ignore"
   external_enabled        = true
