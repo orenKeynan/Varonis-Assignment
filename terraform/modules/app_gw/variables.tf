@@ -139,3 +139,20 @@ variable "waf_rule_set_version" {
   type        = string
   default     = "3.2"
 }
+
+variable "user_assigned_identity_name" {
+  description = "Identity name to access the cert"
+  type = string
+  default = "container-iden"
+}
+
+variable "retention_in_days" {
+  description = "Retention of logs in days"
+  type        = number
+  default     = 30
+}
+
+variable "logs_storage_account_id" {
+  description = "Storage account for diagnostics."
+  type        = string
+}

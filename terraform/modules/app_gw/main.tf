@@ -39,6 +39,23 @@ resource "azurerm_key_vault_certificate" "tls" {
   }
 }
 
+
+resource "azurerm_user_assigned_identity" "appgw_identity" {
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  name                = var.user_assigned_identity_name
+}
+
+# Grant the User Assigned Managed Identity Get permissions on the Key Vault
+resource "azurerm_key_vault_access_policy" "appgw_identity_cert_secret" {
+  key_vault_id = var.azure_key_id
+  tenant_id    = azurerm_user_assigned_identity.appgw_identity.tenant_id
+  object_id    = azurerm_user_assigned_identity.appgw_identity.principal_id
+
+  certificate_permissions = ["Get"]
+  secret_permissions      = ["Get"] # The certificate data is stored as a secret
+}
+
 resource "azurerm_application_gateway" "this" {
   name                = var.app_gw_name
   location            = var.location
@@ -73,14 +90,15 @@ resource "azurerm_application_gateway" "this" {
     }
   }
 
+  identity {
+    type = "UserAssigned"
+    identity_ids = [azurerm_user_assigned_identity.appgw_identity.id]
+  }
+
   # SSL certificates (multiple if you use SNI)
-  dynamic "ssl_certificate" {
-    for_each = var.ssl_certs
-    content {
-      name     = ssl_certificate.value.name
-      data     = filebase64(ssl_certificate.value.pfx_path)
-      password = ssl_certificate.value.pfx_password
-    }
+  ssl_certificate {
+      name     = "${var.app_gw_name}-ss-cert"
+      key_vault_secret_id = azurerm_key_vault_certificate.tls.secret_id
   }
 
   # Backend address pools
@@ -140,5 +158,15 @@ resource "azurerm_application_gateway" "this" {
       rule_set_type    = var.waf_rule_set_type
       rule_set_version = var.waf_rule_set_version
     }
+  }
+}
+
+resource "azurerm_monitor_diagnostic_setting" "appgw_access_logs_to_sa" {
+  name               = "appgw-access-logs-to-storage" # Or another descriptive name
+  target_resource_id = azurerm_application_gateway.this.id
+  storage_account_id = var.logs_storage_account_id # Use the same variable for your target storage account
+
+  enabled_log {
+    category = "ApplicationGatewayAccessLog"
   }
 }

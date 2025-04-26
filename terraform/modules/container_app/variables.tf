@@ -46,11 +46,6 @@ variable "container_name" {
   type        = string
 }
 
-variable "logs_storage_account_id" {
-  description = "Storage account for diagnostics."
-  type        = string
-}
-
 variable "sku" {
   description = "SKU of container app logs analytics"
   type        = string

@@ -124,10 +124,9 @@ module "container_app" {
   container_name          = "rest-api"
   port                    = 8000
   cpu                     = 0.5
-  memory                  = "1.0Gi"
+  memory                  = "1Gi"
   subnet_id               = module.network.subnet_ids["app"]
   image                   = "varonishaacr.azurecr.io/restaurant-app:latest"
-  logs_storage_account_id = module.logs_storage.storage_account_id
 }
 
 resource "azurerm_public_ip" "pip" {
@@ -149,7 +148,7 @@ module "app_gw" {
   capacity            = 1
   azurerm_public_fqdn = azurerm_public_ip.pip.fqdn
   subnet_id           = module.network.subnet_ids["appgw"]
-
+  logs_storage_account_id = module.logs_storage.storage_account_id
   frontend_ports = {
     https = { name = "https", port = 443 }
   }

@@ -60,16 +60,3 @@ resource "azurerm_container_app" "app" {
     type = "SystemAssigned"
   }
 }
-
-data "azurerm_monitor_diagnostic_categories" "app" {
-  resource_id = azurerm_container_app.app.id
-}
-
-resource "azurerm_monitor_diagnostic_setting" "to_sa" {
-  name               = "diag-storage"
-  target_resource_id = azurerm_container_app.app.id
-  storage_account_id = var.logs_storage_account_id
-  enabled_log {
-      category = "AllLogs"
-  }
-}
