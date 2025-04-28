@@ -1,13 +1,13 @@
 from fastapi import APIRouter, HTTPException, Request
 from typing import Optional, List
-from app.models.restaurant import Restaurant, RestaurantResponse
+from app.models.restaurant import Restaurant, RestaurantListResponse
 from app.db.connection import get_db_connection, return_connection
 from app.db.queries import get_restaurants_from_db
 from app.core.logging_config import logger
 
 router = APIRouter()
 
-@router.get("/recommendation", response_model=RestaurantResponse)
+@router.get("/recommendation", response_model=RestaurantListResponse)
 async def get_recommendation(
     style: Optional[str] = None,
     vegetarian: Optional[bool] = None,
@@ -32,10 +32,10 @@ async def get_recommendation(
             logger.info(f"No restaurant found matching criteria: style={style}, vegetarian={vegetarian}, delivery={delivery}, open_now={open_now}")
             raise HTTPException(status_code=404, detail="No restaurant found matching criteria")
         
-        # Return first match as recommended restaurant
-        result = {"restaurantRecommendation": filtered[0]}
-        logger.info(f"Recommendation returned: {filtered[0]['name']}")
-        
+        # Return all matches as recommended restaurants
+        result = {"restaurantRecommendations": filtered}
+        logger.info(f"Recommendations returned: {len(filtered)} restaurants")
+
         return result
         
     except HTTPException:

@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 
 class Restaurant(BaseModel):
     name: str
@@ -10,5 +10,5 @@ class Restaurant(BaseModel):
     vegetarian: bool
     delivery: Optional[bool] = False
 
-class RestaurantResponse(BaseModel):
-    restaurantRecommendation: Restaurant
+class RestaurantListResponse(BaseModel):
+    restaurantRecommendations: List[Restaurant]

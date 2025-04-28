@@ -166,7 +166,7 @@ module "container_app" {
   cpu                       = 0.5
   memory                    = "1Gi"
   subnet_id                 = module.network.subnet_ids["app"]
-  image                     = "varonishaacr.azurecr.io/restaurant-app:21" # To release a new version, change this
+  image                     = "varonishaacr.azurecr.io/restaurant-app:22" # To release a new version, change this
   allow_insecure_connection = true                                        # TLS termination is done on the app gw, all internal communication is done with HTTP
   client_certificate_mode   = "ignore"
   external_enabled          = true

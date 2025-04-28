@@ -13,10 +13,29 @@
     │   └── workflows
     │       └── docker-publish.yml
     ├── README.md
-    ├── api-code
-    │   ├── Dockerfile
-    │   ├── main.py
-    │   └── requirements.txt
+    restaurant_api/
+        ├── app/
+        │   ├── __init__.py
+        │   ├── main.py
+        │   ├── api/
+        │   │   ├── __init__.py
+        │   │   └── endpoints.py
+        │   ├── core/
+        │   │   ├── __init__.py
+        │   │   ├── config.py
+        │   │   └── logging_config.py
+        │   ├── db/
+        │   │   ├── __init__.py
+        │   │   ├── connection.py
+        │   │   └── queries.py
+        │   ├── models/
+        │   │   ├── __init__.py
+        │   │   └── restaurant.py
+        │   └── utils/
+        │       ├── __init__.py
+        │       └── time_utils.py
+        ├── requirements.txt
+        └── Dockerfile
     ├── db-setup-code
     │   └── in.sql
     └── terraform

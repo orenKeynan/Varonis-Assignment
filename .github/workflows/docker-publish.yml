@@ -3,7 +3,7 @@ name: Build & Push Image
 on:
   push:
     paths:
-      - 'api-code/**'
+      - 'restaurant_api/**'
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -22,10 +22,10 @@ jobs:
           password: ${{ secrets.ACR_PASSWORD }}
 
       - uses: docker/setup-buildx-action@v3
-# https://restaurants-api.internal.calmdune-1edbf9c1.eastus.azurecontainerapps.io
+
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: ./api-code/.
+          context: ./restaurant_api/.
           push: true
           tags: varonishaacr.azurecr.io/restaurant-app:${{github.run_number}}
