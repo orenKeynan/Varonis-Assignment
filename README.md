@@ -47,9 +47,9 @@ Basic diagram that shows the general flow of what resources I created and how th
 2. I used my own laptop to run `terraform plan/apply` (and my own credentials).
 3. Created a CI using GitHub Actions for creating docker image.
 4. Since I wanted to save $$$ for myself, didn't always used "production" component, such as multi replicas for the SQL server, etc.
-5. Wrote the Application using Python, my work assumption was that the request is already stucred, so no need to do extra manipulation on it (e.g. "show me what restaurants are open *tomorrow at 9:30*", "show me restarurants does serve Japanise food but *doesn't* have delivery").
-6. Used Azure SQL service to storage the data. Chose a rational DB since the data is stucred & clear, Otherwise would use a diffenet DB, such as MongoDB.
+5. Wrote the Application using Python.
+6. Used Azure SQL service to store the data. Chose a rational DB since the data is stucred & clear, Otherwise would use a diffenet DB, such as MongoDB.
 7. Exposing 2 APIs: <br>
     7.1. "/restaurants": Printing all restaurants, no filtering. <br>
     7.2. "/recommendation": Printing filtered restaurants.
-8. CD is done using Terraform using a manual update of the image tag and running "terraform apply"
+8. CD is done using Terraform and a manual update of the image tag and running "terraform apply"

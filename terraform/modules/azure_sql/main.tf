@@ -17,7 +17,6 @@ resource "azurerm_mssql_server" "this" {
   tags                          = var.tags
 }
 
-# Need to make it production grade, meaning what will happen if not using a Serverless SKU
 resource "azurerm_mssql_database" "this" {
   name                        = var.database_name
   server_id                   = azurerm_mssql_server.this.id
