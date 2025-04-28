@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from typing import Optional, List, Dict
-from app.core.logging_config import logger
-from app.utils.time_utils import is_open
+from core.logging_config import logger
+from utils.time import is_open
 
 def get_restaurants_from_db(conn, style=None, vegetarian=None, delivery=None, open_now=False) -> List[Dict]:
     """Query database for restaurants matching criteria with proper protection against SQL injection"""

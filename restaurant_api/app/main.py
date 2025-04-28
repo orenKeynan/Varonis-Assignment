@@ -1,8 +1,7 @@
 from fastapi import FastAPI
 import uvicorn
-import os
-from app.api.endpoints import router
-from app.core.config import settings
+from api.endpoints import router
+from core.config import settings
 
 def create_application() -> FastAPI:
     """Create and configure the FastAPI application"""
@@ -20,7 +19,7 @@ app = create_application()
 
 if __name__ == "__main__":
     uvicorn.run(
-        "app.main:app", 
+        app, 
         host=settings.HOST, 
         port=settings.PORT
     )

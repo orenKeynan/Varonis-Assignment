@@ -1,5 +1,5 @@
 from datetime import datetime
-from app.core.logging_config import logger
+from core.logging_config import logger
 
 def is_open(restaurant: dict) -> bool:
     """Check if a restaurant is currently open based on local time"""

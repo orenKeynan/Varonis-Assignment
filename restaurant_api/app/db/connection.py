@@ -1,7 +1,7 @@
 import pyodbc
 from fastapi import HTTPException
-from app.core.config import settings
-from app.core.logging_config import logger
+from core.config import settings
+from core.logging_config import logger
 
 # Connection pool for better performance and reliability
 CONNECTION_POOL = []

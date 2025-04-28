@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException, Request
 from typing import Optional, List
-from app.models.restaurant import Restaurant, RestaurantListResponse
-from app.db.connection import get_db_connection, return_connection
-from app.db.queries import get_restaurants_from_db
-from app.core.logging_config import logger
+from models.restaurant import Restaurant, RestaurantListResponse
+from db.connection import get_db_connection, return_connection
+from db.queries import get_restaurants_from_db
+from core.logging_config import logger
 
 router = APIRouter()
 

@@ -13,9 +13,8 @@
     │   └── workflows
     │       └── docker-publish.yml
     ├── README.md
-    restaurant_api/
+└── restaurant_api/
         ├── app/
-        │   ├── __init__.py
         │   ├── main.py
         │   ├── api/
         │   │   ├── __init__.py
@@ -36,7 +35,7 @@
         │       └── time_utils.py
         ├── requirements.txt
         └── Dockerfile
-    ├── db-setup-code
+    │── db-setup-code
     │   └── in.sql
     └── terraform
         ├── .gitignore
