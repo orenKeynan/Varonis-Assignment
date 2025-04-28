@@ -30,6 +30,10 @@ async def get_recommendation(
     
         conn = get_db_connection()
         
+        # In case the user didn't specifically asked for open restaurants,
+        # asume the user wants the restaurants that are open now
+        if open_now is None:
+            open_now = True
         # Get matching restaurants from database
         filtered = get_restaurants_from_db(conn, style, vegetarian, delivery, open_now)
         
