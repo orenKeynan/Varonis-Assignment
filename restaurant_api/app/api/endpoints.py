@@ -11,15 +11,13 @@ router = APIRouter()
 async def get_recommendation(
     style: Optional[str] = None,
     vegetarian: Optional[bool] = None,
-    delivery: Optional[bool] = None,
-    open_now: bool = True
+    delivery: Optional[bool] = None
 ):
     """
     Get restaurant recommendations based on criteria
     - **style**: Cuisine style (e.g., Italian, Korean)
     - **vegetarian**: Whether the restaurant offers vegetarian options
     - **delivery**: Whether the restaurant offers delivery
-    - **open_now**: Whether the restaurant is currently open
     """
     conn = None
     try:
@@ -31,10 +29,10 @@ async def get_recommendation(
         conn = get_db_connection()
         
         # Get matching restaurants from database
-        filtered = get_restaurants_from_db(conn, style, vegetarian, delivery, open_now)
+        filtered = get_restaurants_from_db(conn, style, vegetarian, delivery)
         
         if not filtered:
-            logger.info(f"No restaurant found matching criteria: style={style}, vegetarian={vegetarian}, delivery={delivery}, open_now={open_now}")
+            logger.info(f"No restaurant found matching criteria: style={style}, vegetarian={vegetarian}, delivery={delivery}")
             raise HTTPException(status_code=404, detail="No restaurant found matching criteria")
         
         # Return all matches instead of just the first one

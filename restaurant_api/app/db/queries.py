@@ -3,7 +3,7 @@ from typing import Optional, List, Dict
 from core.logging_config import logger
 from utils.time import is_open
 
-def get_restaurants_from_db(conn, style=None, vegetarian=None, delivery=None, open_now=True) -> List[Dict]:
+def get_restaurants_from_db(conn, style=None, vegetarian=None, delivery=None) -> List[Dict]:
     """Query database for restaurants matching criteria with proper protection against SQL injection"""
     try:
         cursor = conn.cursor()
@@ -38,9 +38,8 @@ def get_restaurants_from_db(conn, style=None, vegetarian=None, delivery=None, op
             restaurant_dict["delivery"] = bool(restaurant_dict["delivery"])
             restaurants.append(restaurant_dict)
         
-        # Filter for open restaurants if requested
-        if open_now:
-            restaurants = [r for r in restaurants if is_open(r)]
+        # Filter for restaurants that are open now
+        restaurants = [r for r in restaurants if is_open(r)]
             
         return restaurants
         
