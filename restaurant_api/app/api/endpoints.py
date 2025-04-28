@@ -12,7 +12,7 @@ async def get_recommendation(
     style: Optional[str] = None,
     vegetarian: Optional[bool] = None,
     delivery: Optional[bool] = None,
-    open_now: bool = None
+    open_now: bool = True
 ):
     """
     Get restaurant recommendations based on criteria
@@ -24,16 +24,12 @@ async def get_recommendation(
     conn = None
     try:
         # Check if any search criteria are provided
-        if style is None and vegetarian is None and delivery is None and open_now == None:
+        if style is None and vegetarian is None and delivery is None:
             logger.info("No search criteria provided for recommendation")
             return {"restaurantRecommendations": []}  # Return empty list when no criteria provided
     
         conn = get_db_connection()
         
-        # In case the user didn't specifically asked for open restaurants,
-        # asume the user wants the restaurants that are open now
-        if open_now is None:
-            open_now = True
         # Get matching restaurants from database
         filtered = get_restaurants_from_db(conn, style, vegetarian, delivery, open_now)
         

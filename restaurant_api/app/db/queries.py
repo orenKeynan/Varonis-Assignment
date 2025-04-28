@@ -3,7 +3,7 @@ from typing import Optional, List, Dict
 from core.logging_config import logger
 from utils.time import is_open
 
-def get_restaurants_from_db(conn, style=None, vegetarian=None, delivery=None, open_now=None) -> List[Dict]:
+def get_restaurants_from_db(conn, style=None, vegetarian=None, delivery=None, open_now=True) -> List[Dict]:
     """Query database for restaurants matching criteria with proper protection against SQL injection"""
     try:
         cursor = conn.cursor()
