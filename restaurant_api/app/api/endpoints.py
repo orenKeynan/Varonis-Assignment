@@ -32,10 +32,10 @@ async def get_recommendation(
             logger.info(f"No restaurant found matching criteria: style={style}, vegetarian={vegetarian}, delivery={delivery}, open_now={open_now}")
             raise HTTPException(status_code=404, detail="No restaurant found matching criteria")
         
-        # Return all matches as recommended restaurants
-        result = {"restaurantRecommendations": filtered}
+        # Return all matches instead of just the first one
+        result = {"restaurantRecommendations": filtered}  # Changed from restaurantRecommendation to restaurantRecommendations
         logger.info(f"Recommendations returned: {len(filtered)} restaurants")
-
+        
         return result
         
     except HTTPException:
